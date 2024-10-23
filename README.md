@@ -1,8 +1,8 @@
 # Hikit - cai2hikit microservice
 
-Hikit cai2hikit is a microservice responsible for retrieving data from [cai API](https://osm2cai.cai.it/api/), that will serve to integrate cai data with the Hikit service.
+Hikit cai2hikit is a microservice responsible for retrieving data from [cai API](https://osm2cai.cai.it/api/) that will serve to integrate cai data with the Hikit service.
 
-## Build
+## Build and Run
 
 ### Prerequisites
 - JDK 21
@@ -16,6 +16,16 @@ Simply run
 ```
 
 ### Deployment build
+
+It is possible to build a portable .jar file with
+
+```
+./mvnw clean package
+```
+and then run with
+```
+java -jar target/cai2hikit-[VERSION]-SNAPSHOT.jar
+```
 
 ### Test
 
