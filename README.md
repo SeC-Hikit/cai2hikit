@@ -29,3 +29,8 @@ java -jar target/cai2hikit-[VERSION]-SNAPSHOT.jar
 
 ### Test
 
+## API
+
+By default, the openAPI v3 specs are exposed at `/api/v1/api-docs`.
+
+A swagger web interface for the RESTful API can be found at `/swagger-ui/index.html`.
