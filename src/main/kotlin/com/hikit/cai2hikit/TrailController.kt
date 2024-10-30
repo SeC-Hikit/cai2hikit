@@ -1,6 +1,6 @@
 package com.hikit.cai2hikit
 
-import Trail
+import com.hikit.cai2hikit.data.Trail
 import org.springframework.web.bind.annotation.*
 import java.util.concurrent.atomic.AtomicLong
 
