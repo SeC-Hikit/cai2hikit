@@ -7,21 +7,34 @@ import java.util.*
 class Trail {
     @Id private var id: ObjectId = ObjectId()
 
+    private var relation_id: Int = 0
     private var source: String = ""
     private var cai_scale: String = ""
     private var from: String = ""
     private var to: String = ""
     private var ref: String = ""
+    private var public_page: String = ""
     private var sda: Int = 0
-    private var coordinates: Array<Coordinates2D> = emptyArray()
+    private var validation_date: Date = Date()
+    private var updated_at: Date = Date()
 
-    fun setId(idIn: String) {
-        val date = Date()
-        id = ObjectId(date, idIn.toInt())
-    }
+    private var coordinates: Array<Coordinates2D> = emptyArray()
 
     fun getId(): String {
         return id.toString()
+    }
+
+    fun setId(id: Int) {
+        val date = Date()
+        this.id = ObjectId(date, id)
+    }
+
+    fun getRelationId(): Int {
+        return relation_id
+    }
+
+    fun setRelationId(relation_id: Int) {
+        this.relation_id = relation_id
     }
 
     fun getSource(): String {
@@ -64,12 +77,36 @@ class Trail {
         this.ref = ref
     }
 
+    fun getPublicPage(): String {
+        return public_page
+    }
+
+    fun setPublicPage(public_page: String) {
+        this.public_page = public_page
+    }
+
     fun getSda(): Int {
         return sda
     }
 
     fun setSda(sda: Int) {
         this.sda = sda
+    }
+
+    fun getValidation_date(): Date {
+        return validation_date
+    }
+
+    fun setValidationDate(validation_date: Date) {
+        this.validation_date = validation_date
+    }
+
+    fun getUpdated_at(): Date {
+        return updated_at
+    }
+
+    fun setUpdatedAt(updated_at: Date) {
+        this.updated_at = updated_at
     }
 
     fun getCoordinates(): Array<Coordinates2D> {
