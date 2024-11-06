@@ -1,6 +1,6 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.caidata.Trail
+import com.hikit.cai2hikit.dao.Trail
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.data.rest.core.annotation.RepositoryRestResource

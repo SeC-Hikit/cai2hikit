@@ -1,8 +1,7 @@
-package com.hikit.cai2hikit.caidata
+package com.hikit.cai2hikit.dao
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import org.springframework.data.annotation.Id
-import org.bson.types.ObjectId
 import java.util.*
 
 data class Trail(
