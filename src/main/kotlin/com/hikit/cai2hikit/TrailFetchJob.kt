@@ -8,18 +8,20 @@ import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
 
 @Service
-class TrailFetchJob() {
+class TrailFetchJob {
 
-//    private val restClient: RestClient = RestClient.builder().baseUrl("http://osm2cai.it/api/v2/").build()
-    private val restClient: RestClient = RestClient.create()
+    private val restClient: RestClient = RestClient.builder().baseUrl("https://osm2cai.it/api/v2/").build()
 
     @Scheduled(fixedRate = 10000)
     fun getTrail() {
-        println(restClient.get()
-            .uri("http://osm2cai.it/api/v2/hiking-route/11581")
+        val serializedResponse = restClient.get()
+            .uri("hiking-route/11581")
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .body(Trail::class.java))
+            .body(Trail::class.java)
+
+        println(serializedResponse)
+        // TODO
     }
 
 }
