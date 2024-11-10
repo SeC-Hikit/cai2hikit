@@ -1,4 +1,4 @@
-package com.hikit.cai2hikit.dao
+package com.hikit.cai2hikit.dto
 
 class Coordinates2D {
     private var latitude: Double = 0.0

@@ -11,7 +11,7 @@ class TrailController {
     private val counter = AtomicLong()
 
     @GetMapping("/{code}")
-    fun getTrail(@PathVariable code: Int): Trail {
-        return Trail(counter.incrementAndGet(), code)
+    fun getTrail(@PathVariable code: Int): Trail? {
+        return null
     }
 }
