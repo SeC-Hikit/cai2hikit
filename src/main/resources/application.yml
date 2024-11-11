@@ -1,5 +1,4 @@
 job:
-    poolSize: 25
     fetch:
         chron: 0/10 * * * * *
 spring:
