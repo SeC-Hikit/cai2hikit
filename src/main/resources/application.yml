@@ -1,5 +1,5 @@
-data:
-    chron: * 5 * * * *
+cron:
+    cr-expr: '*/10 * * * * *'
 spring:
     application:
         name: cai2hikit
