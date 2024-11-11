@@ -2,19 +2,16 @@ package com.hikit.cai2hikit
 
 import com.hikit.cai2hikit.dto.Trail
 import org.springframework.http.MediaType
-import org.springframework.scheduling.Trigger
-import org.springframework.scheduling.TriggerContext
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestClient
-import org.springframework.web.client.body
-import java.time.Instant
 
 @Service
 class TrailFetchJob {
 
     private val restClient: RestClient = RestClient.builder().baseUrl("https://osm2cai.it/api/v2/").build()
 
+    @Scheduled(cron = "\${job.fetch.chron}")
     fun getTrail() {
         // TODO: get all ER trails
 
