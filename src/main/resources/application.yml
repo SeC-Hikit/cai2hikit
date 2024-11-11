@@ -1,5 +1,7 @@
-data:
-    chron: * 5 * * * *
+job:
+    poolSize: 25
+    fetch:
+        chron: 0/10 * * * * *
 spring:
     application:
         name: cai2hikit
