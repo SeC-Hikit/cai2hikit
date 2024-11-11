@@ -1,3 +1,6 @@
+job:
+    fetch:
+        chron: 0/10 * * * * *
 spring:
     application:
         name: cai2hikit
