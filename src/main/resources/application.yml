@@ -1,5 +1,9 @@
 job:
     fetch:
+        bblatmin: 43.741833
+        bblatmax: 44.810096
+        bblongmin: 10.355102
+        bblongmax: 12.036322
         chron: 0/10 * * * * *
 spring:
     application:
