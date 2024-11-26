@@ -13,6 +13,9 @@ import org.springframework.web.client.RestClient
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 private const val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
 
 @Service
@@ -28,15 +31,14 @@ class TrailFetchJob(
 
     private val restClient: RestClient = RestClient.builder().baseUrl("https://osm2cai.it/api/v2/").build()
 
+    var logger: Logger = LoggerFactory.getLogger(TrailFetchJob::class.java)
+
     @Scheduled(cron = "\${job.fetch.chron}")
     fun getTrail() {
-        println(trailRepository.findAll())
-        val uriString = "hiking-routes/bb/$bblatmax,$bblatmin,$bblongmin,$bblongmax/4"
-        println(uriString)
+        val boloHikesListUri = "hiking-routes/bb/$bblatmax,$bblatmin,$bblongmin,$bblongmax/4"
 
-        // TODO make the bounding box configurable
         val trailsResponse = restClient.get()
-            .uri(uriString)
+            .uri(boloHikesListUri)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
             .body(Map::class.java)
@@ -56,7 +58,8 @@ class TrailFetchJob(
                     .retrieve()
                     .body(Trail::class.java)
 
-                println(serializedResponse)
+                logger.info(serializedResponse.toString())
+
                 if (serializedResponse != null) {
                     trailRepository.save(Trail(serializedResponse.properties, serializedResponse.geometry))
                 }
