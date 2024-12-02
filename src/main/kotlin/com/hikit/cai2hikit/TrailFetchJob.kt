@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestClient
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -20,16 +19,15 @@ private const val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
 
 @Service
 class TrailFetchJob(
-        @Value("\${job.fetch.bblatmin}") val bblatmin: String,
-        @Value("\${job.fetch.bblatmax}") val bblatmax: String,
-        @Value("\${job.fetch.bblongmin}") val bblongmin: String,
-        @Value("\${job.fetch.bblongmax}") val bblongmax: String
+    private val trailRestClient: TrailRestClient = getTrailRestClient("https://osm2cai.it/api/v2/"),
+    @Value("\${job.fetch.bblatmin}") val bblatmin: String,
+    @Value("\${job.fetch.bblatmax}") val bblatmax: String,
+    @Value("\${job.fetch.bblongmin}") val bblongmin: String,
+    @Value("\${job.fetch.bblongmax}") val bblongmax: String
     ) {
 
     @Autowired
     private lateinit var trailRepository: TrailRepository
-
-    private val restClient: RestClient = RestClient.builder().baseUrl("https://osm2cai.it/api/v2/").build()
 
     var logger: Logger = LoggerFactory.getLogger(TrailFetchJob::class.java)
 
@@ -37,7 +35,7 @@ class TrailFetchJob(
     fun getTrail() {
         val boloHikesListUri = "hiking-routes/bb/$bblatmax,$bblatmin,$bblongmin,$bblongmax/4"
 
-        val trailsResponse = restClient.get()
+        val trailsResponse = trailRestClient.getRestClient().get()
             .uri(boloHikesListUri)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
@@ -52,7 +50,7 @@ class TrailFetchJob(
         //TODO : store in DB
         if (trailsResponse != null) {
             for(trailId in trailsResponse) {
-                val serializedResponse = restClient.get()
+                val serializedResponse = trailRestClient.getRestClient().get()
                     .uri("hiking-route/${trailId.id}")
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
