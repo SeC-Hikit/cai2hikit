@@ -6,7 +6,7 @@ import org.springframework.web.client.RestClient
 class TrailRestClient {
     private lateinit var restClient: RestClient
 
-    fun init(baseUrl: String): TrailRestClient {
+    fun init(baseUrl: String = "https://osm2cai.it/api/v2/"): TrailRestClient {
         this.restClient = RestClient.builder().baseUrl(baseUrl).build()
         return this
     }

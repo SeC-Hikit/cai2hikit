@@ -1,7 +1,5 @@
 package com.hikit.cai2hikit
 
-import org.springframework.data.mongodb.repository.MongoRepository
-
 import com.hikit.cai2hikit.dto.IdToUpdateDate
 import com.hikit.cai2hikit.dto.Trail
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +17,7 @@ private const val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
 
 @Service
 class TrailFetchJob(
-    private val trailRestClient: TrailRestClient = getTrailRestClient("https://osm2cai.it/api/v2/"),
+    val trailRestClient: TrailRestClient = getTrailRestClient("https://osm2cai.it/api/v2/"),
     @Value("\${job.fetch.bblatmin}") val bblatmin: String,
     @Value("\${job.fetch.bblatmax}") val bblatmax: String,
     @Value("\${job.fetch.bblongmin}") val bblongmin: String,
