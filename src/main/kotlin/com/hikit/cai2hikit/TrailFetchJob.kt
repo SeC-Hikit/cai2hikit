@@ -17,7 +17,7 @@ private const val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
 
 @Service
 class TrailFetchJob(
-    val trailRestClient: TrailRestClient = getTrailRestClient("https://osm2cai.it/api/v2/"),
+    val trailRestClient: TrailRestClient,
     @Value("\${job.fetch.bblatmin}") val bblatmin: String,
     @Value("\${job.fetch.bblatmax}") val bblatmax: String,
     @Value("\${job.fetch.bblongmin}") val bblongmin: String,
