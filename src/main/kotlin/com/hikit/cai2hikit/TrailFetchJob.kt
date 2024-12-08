@@ -1,30 +1,66 @@
 package com.hikit.cai2hikit
 
+import com.hikit.cai2hikit.dto.IdToUpdateDate
 import com.hikit.cai2hikit.dto.Trail
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestClient
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
+private const val dateTimeFormat = "yyyy-MM-dd HH:mm:ss"
 
 @Service
-class TrailFetchJob {
+class TrailFetchJob(
+    val trailRestClient: TrailRestClient,
+    @Value("\${job.fetch.bblatmin}") val bblatmin: String,
+    @Value("\${job.fetch.bblatmax}") val bblatmax: String,
+    @Value("\${job.fetch.bblongmin}") val bblongmin: String,
+    @Value("\${job.fetch.bblongmax}") val bblongmax: String
+    ) {
 
-    private val restClient: RestClient = RestClient.builder().baseUrl("https://osm2cai.it/api/v2/").build()
+    @Autowired
+    private lateinit var trailRepository: TrailRepository
+
+    var logger: Logger = LoggerFactory.getLogger(TrailFetchJob::class.java)
 
     @Scheduled(cron = "\${job.fetch.chron}")
     fun getTrail() {
-        // TODO: get all ER trails
+        val boloHikesListUri = "hiking-routes/bb/$bblatmax,$bblatmin,$bblongmin,$bblongmax/4"
 
-        // TODO: persist all of them querying them one by one with a short interruption in the middle (~1s)
-        val serializedResponse = restClient.get()
-            .uri("hiking-route/11581")
+        val trailsResponse = trailRestClient.getRestClient().get()
+            .uri(boloHikesListUri)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .body(Trail::class.java)
+            .body(Map::class.java)
+            ?.map {
+                IdToUpdateDate(
+                    it.key.toString(),
+                    LocalDateTime.parse(it.value.toString(), DateTimeFormatter.ofPattern(dateTimeFormat))
+                )
+            }
 
-        // TODO exclude non relevant trails
-        println(serializedResponse)
-        // TODO
+        //TODO : store in DB
+        if (trailsResponse != null) {
+            for(trailId in trailsResponse) {
+                val serializedResponse = trailRestClient.getRestClient().get()
+                    .uri("hiking-route/${trailId.id}")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .body(Trail::class.java)
+
+                logger.info(serializedResponse.toString())
+
+                if (serializedResponse != null) {
+                    trailRepository.save(Trail(serializedResponse.properties, serializedResponse.geometry))
+                }
+                Thread.sleep(1_000)
+            }
+        }
     }
-
 }
