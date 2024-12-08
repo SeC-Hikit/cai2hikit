@@ -6,8 +6,11 @@ job:
         bblatmax: 44.810096
         bblongmin: 10.355102
         bblongmax: 12.036322
-        chron: 0/30 * * * * *
+        chron: 0/10 * * * * *
 spring:
+    data:
+      mongodb:
+        database: cai2hikit
     application:
         name: cai2hikit
 springdoc:
