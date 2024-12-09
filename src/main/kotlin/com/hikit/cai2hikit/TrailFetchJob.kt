@@ -14,8 +14,7 @@ class TrailFetchJob(
     private val logger: Logger = LoggerFactory.getLogger(TrailFetchJob::class.java)
 
     @Scheduled(cron = "\${job.fetch.chron}")
-    fun getTrail() {
-
+    fun updateSystem() {
         val fetchTrailIdsWithinBoundBox = trailRestClient.fetchTrailIdsWithinBoundBox()
         for (trailToLastUpdate in fetchTrailIdsWithinBoundBox) {
             val fetchedTrail = trailRestClient.fetchTrail(trailToLastUpdate.id)

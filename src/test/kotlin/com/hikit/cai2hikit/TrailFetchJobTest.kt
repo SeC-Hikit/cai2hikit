@@ -1,30 +1,27 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.dto.Trail
+import com.hikit.cai2hikit.dto.IdToUpdateDate
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.springframework.http.MediaType
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
+import java.time.LocalDateTime
 
 
 class TrailFetchJobTest(
-    @Mock val mockedTrailClient: RestClient
+    @Mock val mockedTrailClient: TrailRestClient
 ) {
 
     @Test
     fun `should test retrieving one trail member calls`() {
         // given
-//        `when`(mockedTrailClient.getClient()).
+        `when`(mockedTrailClient.fetchTrailIdsWithinBoundBox())
+            .thenReturn(listOf(IdToUpdateDate("123", LocalDateTime.now())))
         // when
+        val systemUnderTest = TrailFetchJob(mockedTrailClient, mock())
 
         // then
-        //  should I use \${test.fetch.trailid} and application.yml?
-        val singleTrailFetch = "http://osm2cai.it/api/v2/hiking-route/30319"
-        val trailTestResponse = mockedTrailClient.getClient().get()
-            .uri(singleTrailFetch)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .body(Trail::class.java)
-        print(trailTestResponse)
+        systemUnderTest.updateSystem()
     }
 
 }
