@@ -19,16 +19,16 @@ class TrailFetchJob(
         for (trailToLastUpdate in fetchTrailIdsWithinBoundBox) {
             val fetchedTrail = trailRestClient.fetchTrail(trailToLastUpdate.id)
             if (fetchedTrail == null) {
-                // TODO: how should we manage this?
                 logger.error("Could not fetch trail with id ${trailToLastUpdate.id}")
             }
             val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail!!.properties.id)
-            if(previouslySavedTrail != null && previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {
+            if(previouslySavedTrail == null){
+                trailRepository.insert(fetchedTrail)
+            } else if(previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {
                 logger.info("Trail with id ${trailToLastUpdate.id} updated by newly fetched $fetchedTrail")
                 // TODO: override data
             } else {
-                logger.info("Trail with id ${trailToLastUpdate.id} was found new. Saving it.")
-                trailRepository.insert(fetchedTrail)
+                logger.debug("Trail with id ${trailToLastUpdate.id} is already up to date")
             }
             Thread.sleep(1_000)
         }
