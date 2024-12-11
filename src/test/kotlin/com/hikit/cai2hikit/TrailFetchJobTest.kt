@@ -6,8 +6,7 @@ import com.hikit.cai2hikit.dto.Properties
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 import java.time.LocalDateTime
@@ -49,6 +48,8 @@ class TrailFetchJobTest(
 
         // then
         systemUnderTest.updateSystem()
+
+        verify(mockedTrailClient, times(1)).fetchTrail("30319")
 
     }
 }
