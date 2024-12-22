@@ -1,11 +1,16 @@
 package com.hikit.cai2hikit.dto
 
-class Coordinates2D {
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
+import com.fasterxml.jackson.annotation.JsonCreator
 
-    public constructor(coordinates: Array<Double>) {
+class Coordinates2D(
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0
+) {
+    @JsonCreator
+    constructor(coordinates: Array<Double>) : this() {
         longitude = coordinates[0]
         latitude = coordinates[1]
     }
+
 }
+

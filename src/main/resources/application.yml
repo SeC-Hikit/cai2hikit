@@ -1,9 +1,22 @@
+resource:
+    path: https://osm2cai.it/api/v2/
 job:
     fetch:
+        bblatmin: 43.741833
+        bblatmax: 44.810096
+        bblongmin: 10.355102
+        bblongmax: 12.036322
         chron: 0/10 * * * * *
 spring:
+    data:
+      mongodb:
+        database: cai2hikit
     application:
         name: cai2hikit
 springdoc:
     api-docs:
         path: /api/v1/api-docs
+logging:
+    file:
+        name: logs/app.log
+        path: logs

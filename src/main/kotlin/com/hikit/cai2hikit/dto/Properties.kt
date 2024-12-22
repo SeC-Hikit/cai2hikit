@@ -12,8 +12,8 @@ data class Properties(
     var source: String,
     @JsonProperty("cai_scale")
     var caiScale: String,
-    var from: String,
-    var to: String,
+    var from: String?,
+    var to: String?,
     var ref: String,
     @JsonProperty("public_page")
     var publicPage: String,

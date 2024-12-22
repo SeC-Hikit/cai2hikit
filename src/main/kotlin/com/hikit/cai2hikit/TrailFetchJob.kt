@@ -1,30 +1,48 @@
 package com.hikit.cai2hikit
 
+import com.hikit.cai2hikit.dto.IdToUpdateDate
 import com.hikit.cai2hikit.dto.Trail
-import org.springframework.http.MediaType
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestClient
+
 
 @Service
-class TrailFetchJob {
-
-    private val restClient: RestClient = RestClient.builder().baseUrl("https://osm2cai.it/api/v2/").build()
+class TrailFetchJob(
+    val trailRestClient: TrailRestClient,
+    val trailRepository: TrailRepository
+) {
+    private val logger: Logger = LoggerFactory.getLogger(TrailFetchJob::class.java)
 
     @Scheduled(cron = "\${job.fetch.chron}")
-    fun getTrail() {
-        // TODO: get all ER trails
-
-        // TODO: persist all of them querying them one by one with a short interruption in the middle (~1s)
-        val serializedResponse = restClient.get()
-            .uri("hiking-route/11581")
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .body(Trail::class.java)
-
-        // TODO exclude non relevant trails
-        println(serializedResponse)
-        // TODO
+    fun updateSystem() {
+        val fetchTrailIdsWithinBoundBox = trailRestClient.fetchTrailIdsWithinBoundBox()
+        for (trailToLastUpdate in fetchTrailIdsWithinBoundBox) {
+            val fetchedTrail = trailRestClient.fetchTrail(trailToLastUpdate.id)
+            if (fetchedTrail == null) {
+                logger.error("Could not fetch trail with id ${trailToLastUpdate.id}")
+                continue
+            }
+            upsertMoreRecentData(fetchedTrail, trailToLastUpdate)
+            Thread.sleep(1_000)
+        }
     }
 
+    private fun upsertMoreRecentData(
+        fetchedTrail: Trail,
+        trailToLastUpdate: IdToUpdateDate
+    ) {
+        val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail!!.properties.id)
+        if (previouslySavedTrail == null) {
+            trailRepository.insert(fetchedTrail)
+        } else if (previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {
+            logger.info("Trail with id ${trailToLastUpdate.id} updated by newly fetched $fetchedTrail")
+            previouslySavedTrail.properties = fetchedTrail.properties
+            previouslySavedTrail.geometry = fetchedTrail.geometry
+            trailRepository.save(previouslySavedTrail)
+        } else {
+            logger.debug("Trail with id ${trailToLastUpdate.id} is already up to date")
+        }
+    }
 }
