@@ -6,6 +6,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 
 @Service
@@ -22,6 +23,10 @@ class TrailFetchJob(
             val fetchedTrail = trailRestClient.fetchTrail(trailToLastUpdate.id)
             if (fetchedTrail == null) {
                 logger.error("Could not fetch trail with id ${trailToLastUpdate.id}")
+                continue
+            }
+            if (fetchedTrail.properties.ref == null) {
+                logger.warn("Could fetch trail with id ${trailToLastUpdate.id}, but Ref Id has been found 'null'. Skip saving")
                 continue
             }
             upsertMoreRecentData(fetchedTrail, trailToLastUpdate)
