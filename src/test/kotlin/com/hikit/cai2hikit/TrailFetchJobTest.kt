@@ -48,7 +48,7 @@ class TrailFetchJobTest(
 
         `when`(mockedTrailClient.fetchTrailIdsWithinBoundBox())
             .thenReturn(listOf(IdToUpdateDate(expectedId, LocalDateTime.now())))
-        val systemUnderTest = TrailFetchJob(mockedTrailClient, mock())
+        val systemUnderTest = TrailFetchJob(mockedTrailClient, mockedTrailRepository)
 
         // when
         systemUnderTest.updateSystem()
@@ -56,6 +56,48 @@ class TrailFetchJobTest(
         // then
         verify(mockedTrailClient, times(1)).fetchTrail(expectedId)
     }
+
+    @Test
+    fun `should not save null ref trail`() {
+        // given
+        val expectedId = "30319"
+        `when`(mockedTrailClient.fetchTrail(expectedId))
+            .thenReturn(
+                Trail(
+                    properties = Properties(
+                        expectedId,
+                        123,
+                        "",
+                        "",
+                        "",
+                        "",
+                        null,
+                        "",
+                        123,
+                        Date(),
+                        Date(),
+                    ),
+                    geometry = Geometry(
+                        type = "type",
+                        coordinates = listOf()
+                    )
+                )
+            )
+
+
+        `when`(mockedTrailClient.fetchTrailIdsWithinBoundBox())
+            .thenReturn(listOf(IdToUpdateDate(expectedId, LocalDateTime.now())))
+        val systemUnderTest = TrailFetchJob(mockedTrailClient, mockedTrailRepository)
+
+        // when
+        systemUnderTest.updateSystem()
+
+        // then
+        verify(mockedTrailClient, times(1)).fetchTrail(expectedId)
+        verify(mockedTrailRepository, never()).findByPropsId(expectedId)
+        verify(mockedTrailRepository, never()).save(any())
+    }
+
 
     @Test
     fun `should test retrieving one trail and updating it with member calls`() {
