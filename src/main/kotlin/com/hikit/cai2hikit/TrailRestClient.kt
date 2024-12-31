@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
+import org.springframework.web.client.RestClientException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -48,14 +49,19 @@ class TrailRestClient(
         logger.debug("Going to fetch full trail with Id '$id' from remote")
         val trailUri = "hiking-route/${id}"
         println(trailUri)
-        val serializedResponse = restClient.getClient().get()
-            .uri(trailUri)
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .body(Trail::class.java)
-        println(serializedResponse)
-        logger.debug("Done fetching full trail with Id '$id' from remote")
-        return serializedResponse
+        try {
+            val serializedResponse = restClient.getClient().get()
+                .uri(trailUri)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .body(Trail::class.java)
+            println(serializedResponse)
+            logger.debug("Done fetching full trail with Id '$id' from remote")
+            return serializedResponse
+        } catch (ex: RestClientException) {
+            logger.debug("Error with fetching trail with $id' from remote, cause: ${ex.message}" )
+            return null
+        }
     }
 
 }
