@@ -18,7 +18,7 @@ class TrailFetchJob(
 
     @Scheduled(cron = "\${job.fetch.chron}")
     fun updateSystem() {
-        val fetchTrailIdsWithinBoundBox = trailRestClient.fetchTrailIdsWithinBoundBox()
+        val fetchTrailIdsWithinBoundBox = listOf(IdToUpdateDate("16269", LocalDateTime.now()))// trailRestClient.fetchTrailIdsWithinBoundBox()
         for (trailToLastUpdate in fetchTrailIdsWithinBoundBox) {
             val fetchedTrail = trailRestClient.fetchTrail(trailToLastUpdate.id)
             if (fetchedTrail == null) {
