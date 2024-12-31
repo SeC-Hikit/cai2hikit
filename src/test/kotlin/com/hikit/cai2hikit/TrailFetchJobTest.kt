@@ -148,6 +148,23 @@ class TrailFetchJobTest(
         })
     }
 
+    @Test
+    fun `should skip saving on fetching error`() {
+        // given
+        val expectedId = "any"
+        doReturn(listOf(IdToUpdateDate(expectedId, LocalDateTime.now()))).`when`(mockedTrailClient).fetchTrailIdsWithinBoundBox()
+        doReturn(null).`when`(mockedTrailClient).fetchTrail(expectedId)
+        val systemUnderTest = TrailFetchJob(mockedTrailClient, mockedTrailRepository)
+
+        // when
+        systemUnderTest.updateSystem()
+
+        // then
+        verify(mockedTrailRepository, never()).findByPropsId(expectedId)
+        verify(mockedTrailRepository, never()).save(any())
+    }
+
+
     private fun getDate(someSavedDate: LocalDate): Date =
         Date.from(someSavedDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
 
