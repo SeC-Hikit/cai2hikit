@@ -9,11 +9,11 @@ data class Properties(
     var id: String,
     @JsonProperty("relation_id")
     @Id val relationId: Int,
-    var source: String,
+    var source: String?,
     @JsonProperty("cai_scale")
     var caiScale: String,
-    var from: String,
-    var to: String,
+    var from: String?,
+    var to: String?,
     @JsonProperty(defaultValue = "", required = false)
     var ref: String?,
     @JsonProperty("public_page")
