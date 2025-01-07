@@ -30,7 +30,7 @@ class TrailFetchJob(
                 continue
             }
             upsertMoreRecentData(fetchedTrail, trailToLastUpdate)
-            Thread.sleep(1_000)
+            Thread.sleep(200)
         }
     }
 
