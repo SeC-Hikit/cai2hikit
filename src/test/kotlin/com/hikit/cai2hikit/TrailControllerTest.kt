@@ -9,6 +9,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
+import kotlin.test.assertEquals
 
 
 @ExtendWith(MockitoExtension::class)
@@ -18,68 +19,68 @@ class TrailControllerTest(
     @Test
     fun `should get trail by id`() {
         val expectedId = "123"
-        `when`(mockedTrailRepository.findByPropsId(expectedId))
-            .thenReturn(
-                Trail(
-                    properties = Properties(
-                        expectedId,
-                        123,
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        4,
-                        Date(),
-                        Date(),
-                    ),
-                    geometry = Geometry(
-                        type = "type",
-                        coordinates = listOf()
-                    )
-                )
+        val storedTrail = Trail(
+            properties = Properties(
+                expectedId,
+                123,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                4,
+                Date(),
+                Date(),
+            ),
+            geometry = Geometry(
+                type = "type",
+                coordinates = listOf()
             )
+        )
+        `when`(mockedTrailRepository.findByPropsId(expectedId))
+            .thenReturn(storedTrail)
 
         val controllerUnderTest = TrailController(mockedTrailRepository)
 
-        controllerUnderTest.getTrail(expectedId)
+        val returnedTrail = controllerUnderTest.getTrail(expectedId)
 
         verify(mockedTrailRepository, times(1)).findByPropsId(expectedId)
+        assertEquals(returnedTrail, storedTrail)
     }
 
     @Test
     fun `should get trail by ref`() {
         val expectedRef = "101"
-        `when`(mockedTrailRepository.findByRef(expectedRef))
-            .thenReturn(
-                listOf(
-                    Trail(
-                        properties = Properties(
-                            "123",
-                            123,
-                            "",
-                            "",
-                            "",
-                            "",
-                            expectedRef,
-                            "",
-                            4,
-                            Date(),
-                            Date()
-                        ),
-                        geometry = Geometry(
-                            type = "type",
-                            coordinates = listOf()
-                        )
-                    )
+        val storedTrailList = listOf(
+            Trail(
+                properties = Properties(
+                    "123",
+                    123,
+                    "",
+                    "",
+                    "",
+                    "",
+                    expectedRef,
+                    "",
+                    4,
+                    Date(),
+                    Date()
+                ),
+                geometry = Geometry(
+                    type = "type",
+                    coordinates = listOf()
                 )
             )
+        )
+        `when`(mockedTrailRepository.findByRef(expectedRef))
+            .thenReturn(storedTrailList)
 
         val controllerUnderTest = TrailController(mockedTrailRepository)
 
-        controllerUnderTest.getTrailByRef(expectedRef)
+        val returnedTrail = controllerUnderTest.getTrailByRef(expectedRef)
 
         verify(mockedTrailRepository, times(1)).findByRef(expectedRef)
+        assertEquals(returnedTrail, storedTrailList)
     }
 }
