@@ -24,7 +24,6 @@ class TrailRestClient(
     @Value("\${job.fetch.bblongmax}") val bblongmax: String
 ) {
     fun fetchTrailIdsWithinBoundBox(): List<IdToUpdateDate> {
-        println("Going to fetch trails IDs from remote")
         logger.debug("Going to fetch trails IDs from remote")
         val trailListUri = "hiking-routes/bb/$bblatmax,$bblatmin,$bblongmin,$bblongmax/$sda"
         val idToLastUpdatedDate = restClient.getClient().get()
@@ -48,14 +47,12 @@ class TrailRestClient(
     fun fetchTrail(id: String): Trail? {
         logger.debug("Going to fetch full trail with Id '$id' from remote")
         val trailUri = "hiking-route/${id}"
-        println(trailUri)
         try {
             val serializedResponse = restClient.getClient().get()
                 .uri(trailUri)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(Trail::class.java)
-            println(serializedResponse)
             logger.debug("Done fetching full trail with Id '$id' from remote")
             return serializedResponse
         } catch (ex: RestClientException) {
