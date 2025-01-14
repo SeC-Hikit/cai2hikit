@@ -25,7 +25,7 @@ class TrailRestClient(
 ) {
     fun fetchTrailIdsWithinBoundBox(): List<IdToUpdateDate> {
         logger.debug("Going to fetch trails IDs from remote")
-        val trailListUri = "hiking-routes/bb/$bblatmax,$bblatmin,$bblongmin,$bblongmax/$sda"
+        val trailListUri = "hiking-routes/bb/$bblongmin,$bblatmin,$bblongmax,$bblatmax/$sda"
         val idToLastUpdatedDate = restClient.getClient().get()
             .uri(trailListUri)
             .accept(MediaType.APPLICATION_JSON)
