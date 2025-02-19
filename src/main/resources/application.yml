@@ -20,3 +20,9 @@ logging:
     file:
         name: logs/app.log
         path: logs
+
+# OpenAltitude microservice
+microservice:
+    oa:
+        port: 8090
+        host: localhost
