@@ -13,6 +13,8 @@ spring:
         database: cai2hikit
     application:
         name: cai2hikit
+openapi:
+    dev-url: localhost:8080
 springdoc:
     api-docs:
         path: /api/v1/api-docs

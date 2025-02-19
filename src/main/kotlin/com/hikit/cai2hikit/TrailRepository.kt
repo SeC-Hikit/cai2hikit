@@ -12,5 +12,5 @@ interface TrailRepository : MongoRepository<Trail?, Int?> {
     fun findByPropsId(id: String) : Trail?
 
     @Query(value = "{ 'properties.ref': ?0 }")
-    fun findByRef(ref: String) : List<Trail>?
+    fun findByRef(ref: String) : List<Trail>
 }

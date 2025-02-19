@@ -1,0 +1,11 @@
+### GET request by code
+GET http://localhost:8080/api/v1/trail/code/1721
+
+### GET 404 not found by code
+GET http://localhost:8080/api/v1/trail/code/99999
+
+### GET request by ref code
+GET http://localhost:8080/api/v1/trail/ref/284
+
+### GET 404 not found ref
+GET http://localhost:8080/api/v1/trail/ref/99999999
