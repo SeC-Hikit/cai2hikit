@@ -11,13 +11,13 @@ else:
 	rise_value = 1 - (1 / ((T1.totalRise - T2.totalRise)^2))
 ```
 
-The accuracy level is then calculated as the average of all the values:
+The metadata similarity level is then calculated as the average of all the values:
 
 ```
-accuracy = (rise_value + fall_value + length_value + highest_value + lowest_value) / 5
+similarity = (rise_value + fall_value + length_value + highest_value + lowest_value) / 5
 ```
 
-We use this accuracy value to select the best matches and then check the coordinates.
+We use this similarity value to select the best matches and then check the coordinates.
 ### Coordinates
 The main issue that prevents us from simply comparing the coordinates' values is that no guarantee is given about the sampling frequency of the trail.
 A possible solution is to use an algorithm called [Dynamic Type Warping](https://en.wikipedia.org/wiki/Dynamic_time_warping) to warp non-linearly in the time dimension.
@@ -29,5 +29,7 @@ A few limitations:
 A way to handle it could be to find the best match between the first/last (50?) coordinates of the two trails and set the start/end
 of the algorithm accordingly. This approach should help mitigate differences in starting location when recording a track.
 
-The final similarity score is given as the value ```[T1.geometry.size][T2.geometry.size]``` of the DTW array divided by
+The geometry similarity score is given as the value ```[T1.geometry.size][T2.geometry.size]``` of the DTW array divided by
 ```(T1.geometry.size + T2.geometry.size) / 2```, which is the average distance between two points of the trail with the best alignment.
+
+Once all the values are calculated, the final score is given as 40% metadata similarity + 60% geometry similarity score.
