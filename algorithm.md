@@ -14,7 +14,7 @@ else:
 The accuracy level is then calculated as the average of all the values:
 
 ```
-accuracy = (rise_value + fall_value + length_value + eta_value + highest_value + lowest_value) / 6
+accuracy = (rise_value + fall_value + length_value + highest_value + lowest_value) / 5
 ```
 
 We use this accuracy value to select the best matches and then check the coordinates.
