@@ -1,6 +1,16 @@
 package com.hikit.cai2hikit
 
+import com.hikit.cai2hikit.dto.Coordinates2D
+import com.hikit.cai2hikit.dto.Geometry
+import com.hikit.cai2hikit.dto.Properties
+import com.hikit.cai2hikit.dto.Trail
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.Mock
+import org.mockito.Mockito.`when`
+import org.mockito.junit.jupiter.MockitoExtension
+import java.util.*
 
 // Test prerequisiti: creare un piccolissimo database di sentieri
 
@@ -14,8 +24,103 @@ import org.junit.jupiter.api.Assertions.*
 
 // TODO - specifica casi di test ulteriori per multisentiero sulla base della vicinanza
 
-class DTWAlgorithmTest
+@ExtendWith(MockitoExtension::class)
+class DTWAlgorithmTest(
+    @Mock val mockedTrailRepository: TrailRepository
+) {
+    @Test
+    fun `should check two identical trails`() {
+        val storedTrail0 = Trail(
+            properties = Properties(
+                "0",
+                0,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                4,
+                Date(),
+                Date(),
+            ),
+            geometry = Geometry(
+                type = "type",
+                coordinates = listOf(
+                    listOf(
+                        Coordinates2D(
+                            11.5473039,
+                            43.9653826
+                        ),
+                        Coordinates2D(
+                            11.5478117,
+                            43.9657346
+                        ),
+                        Coordinates2D(
+                            11.5481934,
+                            43.9659758
+                        ),
+                        Coordinates2D(
+                            11.5484466,
+                            43.9661336
+                        )
+                    )
+                )
+            )
+        )
+        val storedTrail1 = Trail(
+            properties = Properties(
+                "1",
+                1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                4,
+                Date(),
+                Date(),
+            ),
+            geometry = Geometry(
+                type = "type",
+                coordinates = listOf(
+                    listOf(
+                        Coordinates2D(
+                            11.5473039,
+                            43.9653826
+                        ),
+                        Coordinates2D(
+                            11.5478117,
+                            43.9657346
+                        ),
+                        Coordinates2D(
+                            11.5481934,
+                            43.9659758
+                        ),
+                        Coordinates2D(
+                            11.5484466,
+                            43.9661336
+                        )
+                    )
+                )
+            )
+        )
+        `when`(mockedTrailRepository.findByPropsId("0"))
+            .thenReturn(storedTrail0)
+        `when`(mockedTrailRepository.findByPropsId("1"))
+            .thenReturn(storedTrail1)
 
+        val DTWUnderTest = DTWAlgorithm(
+            mockedTrailRepository,
+            "0",
+            storedTrail1
+        )
+
+        val result = DTWUnderTest.getDistanceValue()
+        assertEquals(result, 0.0)
+    }
+}
 // TODO: guarda Integration Test su hikit
 //@RunWith(SpringRunner.class)
 //@SpringBootTest()
