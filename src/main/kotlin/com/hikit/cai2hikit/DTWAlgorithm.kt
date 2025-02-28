@@ -2,6 +2,7 @@ package com.hikit.cai2hikit
 
 import com.hikit.cai2hikit.dto.Coordinates2D
 import com.hikit.cai2hikit.dto.Trail
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -26,7 +27,8 @@ class DTWAlgorithm(
                 DTW[i][j] = cost + min(min(DTW[i-1][j], DTW[i][j-1]), DTW[i-1][j-1])
             }
         }
-        print(DTW[DTW.size - 1][DTW[DTW.size - 1].size - 1].toString() + " ")
-        return(DTW[DTW.size - 1][DTW[DTW.size - 1].size - 1])
+        val result = 1.0 - min(DTW[DTW.size - 1][DTW[DTW.size - 1].size - 1], 1.0)
+        println("$result")
+        return(result)
     }
 }
