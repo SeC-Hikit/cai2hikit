@@ -1,8 +1,8 @@
-package com.hikit.cai2hikit
+package com.hikit.cai2hikit.processor
 
+import com.hikit.cai2hikit.TrailRepository
 import com.hikit.cai2hikit.dto.Coordinates2D
 import com.hikit.cai2hikit.dto.Trail
-import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -18,7 +18,7 @@ class DTWAlgorithm(
 
     fun runAlgorithm(trailId: String, trailIn_1: Trail): Double {
         val trailIn_0 = trailRepository.findByPropsId(trailId)
-        var DTW = Array(trailIn_0!!.geometry.coordinates[0].size) {Array(trailIn_1.geometry.coordinates[0].size) {99.0}}
+        val DTW = Array(trailIn_0!!.geometry.coordinates[0].size) {Array(trailIn_1.geometry.coordinates[0].size) {99.0}}
         DTW[0][0] = 0.0
 
         for(i in 1 until DTW.size) {
@@ -28,7 +28,7 @@ class DTWAlgorithm(
             }
         }
         val result = 1.0 - min(DTW[DTW.size - 1][DTW[DTW.size - 1].size - 1], 1.0)
-        println("$result")
+        println(DTW[DTW.size - 1][DTW[DTW.size - 1].size - 1])
         return(result)
     }
 }
