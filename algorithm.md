@@ -1,4 +1,6 @@
-## Matching Algorithm
+# Matching Algorithm
+
+## Blocks
 ### Stats Metadata
 In order to find the best match between a trail from cai2hikit and a list from Hikit, we first of all calculate 1 minus the inverse of the square of the delta between the stats metadata of the trails. This gives us a normalized (0..1) and exponential value with 0 being perfect match. The exponent is used to better highlight small distances in data when comparing trails.
 
@@ -31,5 +33,7 @@ of the algorithm accordingly. This approach should help mitigate differences in 
 
 The geometry similarity score is given as the value ```[T1.geometry.size][T2.geometry.size]``` of the DTW array divided by
 ```(T1.geometry.size + T2.geometry.size) / 2```, which is the average distance between two points of the trail with the best alignment.
+
+## Final Calculation
 
 Once all the values are calculated, the final score is given as 40% metadata similarity + 60% geometry similarity score.
