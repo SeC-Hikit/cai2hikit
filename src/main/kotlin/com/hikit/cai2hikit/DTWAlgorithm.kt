@@ -7,17 +7,15 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 class DTWAlgorithm(
-    val trailRepository: TrailRepository,
-    val trailId: String,
-    val trailIn_1: Trail
+    val trailRepository: TrailRepository
 ) {
-    fun coordinatesDistance(s: Coordinates2D, t: Coordinates2D): Double {
+    private fun coordinatesDistance(s: Coordinates2D, t: Coordinates2D): Double {
         val tempLat = (s.latitude - t.latitude).pow(2)
         val tempLon = (s.longitude - t.longitude).pow(2)
         return sqrt(tempLat + tempLon)
     }
 
-    fun getDistanceValue(): Double {
+    fun runAlgorithm(trailId: String, trailIn_1: Trail): Double {
         val trailIn_0 = trailRepository.findByPropsId(trailId)
         var DTW = Array(trailIn_0!!.geometry.coordinates[0].size) {Array(trailIn_1.geometry.coordinates[0].size) {99.0}}
         DTW[0][0] = 0.0

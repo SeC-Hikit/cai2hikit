@@ -32,44 +32,6 @@ class DTWAlgorithmTest(
     fun `should check two identical trails`() {
         val storedTrail0 = Trail(
             properties = Properties(
-                "0",
-                0,
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                4,
-                Date(),
-                Date(),
-            ),
-            geometry = Geometry(
-                type = "type",
-                coordinates = listOf(
-                    listOf(
-                        Coordinates2D(
-                            11.5473039,
-                            43.9653826
-                        ),
-                        Coordinates2D(
-                            11.5478117,
-                            43.9657346
-                        ),
-                        Coordinates2D(
-                            11.5481934,
-                            43.9659758
-                        ),
-                        Coordinates2D(
-                            11.5484466,
-                            43.9661336
-                        )
-                    )
-                )
-            )
-        )
-        val storedTrail1 = Trail(
-            properties = Properties(
                 "1",
                 1,
                 "",
@@ -106,18 +68,17 @@ class DTWAlgorithmTest(
                 )
             )
         )
+
         `when`(mockedTrailRepository.findByPropsId("0"))
             .thenReturn(storedTrail0)
         `when`(mockedTrailRepository.findByPropsId("1"))
-            .thenReturn(storedTrail1)
+            .thenReturn(storedTrail0)
 
         val DTWUnderTest = DTWAlgorithm(
-            mockedTrailRepository,
-            "0",
-            storedTrail1
+            mockedTrailRepository
         )
 
-        val result = DTWUnderTest.getDistanceValue()
+        val result = DTWUnderTest.runAlgorithm("0", storedTrail0)
         assertEquals(result, 0.0)
     }
 }
