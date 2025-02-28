@@ -16,11 +16,50 @@ import java.util.*
 
 // ==== Tests dove abbiamo solo un sentiero matchato ==== //
 
-// Test 1: match 0 - input produce output di valore 0
-// Test 2: match 1 - input produce output di valore 1
+// Test 1: match 0 - input produce output di valore 1
+// Test 2: match 1 - input produce output di valore 0
 // Test 3: match ±0.5 - input produce output di valore 0.5
 // Test 4: match ±0.60 - match dati geografici perfetto, match dati calcolati completamente KO
 // Test 5: match ±0.40 - match dati geografici KO, perfect match dati calcolati completamente
+
+val storedTrail0 = Trail(
+    properties = Properties(
+        "1",
+        1,
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        4,
+        Date(),
+        Date(),
+    ),
+    geometry = Geometry(
+        type = "type",
+        coordinates = listOf(
+            listOf(
+                Coordinates2D(
+                    43.9653826,
+                    11.5473039
+                ),
+                Coordinates2D(
+                    43.9657346,
+                    11.5478117
+                ),
+                Coordinates2D(
+                    43.9659758,
+                    11.5481934
+                ),
+                Coordinates2D(
+                    43.9661336,
+                    11.5484466
+                )
+            )
+        )
+    )
+)
 
 // TODO - specifica casi di test ulteriori per multisentiero sulla base della vicinanza
 
@@ -30,44 +69,6 @@ class DTWAlgorithmTest(
 ) {
     @Test
     fun `should check two identical trails`() {
-        val storedTrail0 = Trail(
-            properties = Properties(
-                "1",
-                1,
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                4,
-                Date(),
-                Date(),
-            ),
-            geometry = Geometry(
-                type = "type",
-                coordinates = listOf(
-                    listOf(
-                        Coordinates2D(
-                            43.9653826,
-                            11.5473039
-                        ),
-                        Coordinates2D(
-                            43.9657346,
-                            11.5478117
-                        ),
-                        Coordinates2D(
-                            43.9659758,
-                            11.5481934
-                        ),
-                        Coordinates2D(
-                            43.9661336,
-                            11.5484466
-                        )
-                    )
-                )
-            )
-        )
 
         `when`(mockedTrailRepository.findByPropsId("0"))
             .thenReturn(storedTrail0)
@@ -83,44 +84,6 @@ class DTWAlgorithmTest(
     // two Trails ~110km from each other
     @Test
     fun `should check two distant trails`() {
-        val storedTrail0 = Trail(
-            properties = Properties(
-                "1",
-                1,
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                4,
-                Date(),
-                Date(),
-            ),
-            geometry = Geometry(
-                type = "type",
-                coordinates = listOf(
-                    listOf(
-                        Coordinates2D(
-                            43.9653826,
-                            11.5473039
-                        ),
-                        Coordinates2D(
-                            43.9657346,
-                            11.5478117
-                        ),
-                        Coordinates2D(
-                            43.9659758,
-                            11.5481934
-                        ),
-                        Coordinates2D(
-                            43.9661336,
-                            11.5484466
-                        )
-                    )
-                )
-            )
-        )
         val storedTrail1 = Trail(
             properties = Properties(
                 "1",
@@ -140,20 +103,20 @@ class DTWAlgorithmTest(
                 coordinates = listOf(
                     listOf(
                         Coordinates2D(
-                            11.5473039,
-                            43.9653826
+                            43.9653826,
+                            11.5473039
                         ),
                         Coordinates2D(
-                            11.5478117,
-                            43.9657346
+                            43.8657346,
+                            11.0478117
                         ),
                         Coordinates2D(
-                            11.5481934,
-                            43.9659758
+                            43.9659758,
+                            11.0481934
                         ),
                         Coordinates2D(
-                            11.5484466,
-                            43.9661336
+                            43.9661336,
+                            11.5484466
                         )
                     )
                 )
@@ -169,6 +132,59 @@ class DTWAlgorithmTest(
 
         val result = DTWUnderTest.runAlgorithm("0", storedTrail1)
         assertEquals(result, 0.0)
+    }
+
+    // two Trails giving ~ 0.5 distance
+    @Test
+    fun `should check two close trails`() {
+        val storedTrail1 = Trail(
+            properties = Properties(
+                "1",
+                1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                4,
+                Date(),
+                Date(),
+            ),
+            geometry = Geometry(
+                type = "type",
+                coordinates = listOf(
+                    listOf(
+                        Coordinates2D(
+                            43.9653826,
+                            11.5473039
+                        ),
+                        Coordinates2D(
+                            43.8657346,
+                            11.2478117
+                        ),
+                        Coordinates2D(
+                            43.9659758,
+                            11.3481934
+                        ),
+                        Coordinates2D(
+                            43.9661336,
+                            11.5484466
+                        )
+                    )
+                )
+            )
+        )
+
+        `when`(mockedTrailRepository.findByPropsId("0"))
+            .thenReturn(storedTrail0)
+
+        val DTWUnderTest = DTWAlgorithm(
+            mockedTrailRepository
+        )
+
+        val result = DTWUnderTest.runAlgorithm("0", storedTrail1)
+        assertTrue(result in 0.45..0.55)
     }
 }
 // TODO: guarda Integration Test su hikit
