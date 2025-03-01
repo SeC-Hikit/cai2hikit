@@ -21,7 +21,7 @@ import java.util.*
 // Test 2: match 1 - input produce output di valore 0
 // Test 3: match ±0.5 - input produce output di valore 0.5
 
-val storedTrail0 = Trail(
+private val storedTrail0 = Trail(
     properties = Properties(
         "1",
         1,
