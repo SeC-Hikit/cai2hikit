@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
+import org.mockito.Mockito.anyString
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
@@ -69,7 +70,7 @@ class DTWAlgorithmTest(
     @Test
     fun `should check two identical trails`() {
 
-        `when`(mockedTrailRepository.findByPropsId("0"))
+        `when`(mockedTrailRepository.findByPropsId(anyString()))
             .thenReturn(storedTrail0)
 
         val DTWUnderTest = DTWAlgorithm(
@@ -122,7 +123,7 @@ class DTWAlgorithmTest(
             )
         )
 
-        `when`(mockedTrailRepository.findByPropsId("0"))
+        `when`(mockedTrailRepository.findByPropsId(anyString()))
             .thenReturn(storedTrail0)
 
         val DTWUnderTest = DTWAlgorithm(
@@ -175,7 +176,7 @@ class DTWAlgorithmTest(
             )
         )
 
-        `when`(mockedTrailRepository.findByPropsId("0"))
+        `when`(mockedTrailRepository.findByPropsId(anyString()))
             .thenReturn(storedTrail0)
 
         val DTWUnderTest = DTWAlgorithm(

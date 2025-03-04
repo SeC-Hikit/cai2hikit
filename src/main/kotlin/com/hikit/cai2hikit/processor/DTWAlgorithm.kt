@@ -3,11 +3,14 @@ package com.hikit.cai2hikit.processor
 import com.hikit.cai2hikit.TrailRepository
 import com.hikit.cai2hikit.dto.Coordinates2D
 import com.hikit.cai2hikit.dto.Trail
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class DTWAlgorithm(
+@Component
+class DTWAlgorithm @Autowired constructor(
     val trailRepository: TrailRepository
 ) {
     private fun coordinatesDistance(s: Coordinates2D, t: Coordinates2D): Double {
@@ -28,7 +31,7 @@ class DTWAlgorithm(
             }
         }
         val result = 1.0 - min(DTW[DTW.size - 1][DTW[DTW.size - 1].size - 1], 1.0)
-        println(DTW[DTW.size - 1][DTW[DTW.size - 1].size - 1])
+
         return(result)
     }
 }
