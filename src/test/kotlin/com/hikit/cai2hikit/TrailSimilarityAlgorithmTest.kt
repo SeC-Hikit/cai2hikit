@@ -109,7 +109,11 @@ class TrailSimilarityAlgorithmTest(
             mockedAltitudeAdapter
         )
 
-        val result = trailSimilarityAlgorithmUnderTest.runAlgorithm("0", storedTrail0)
+        val result = trailSimilarityAlgorithmUnderTest.runAlgorithm(
+            "0",
+            storedTrail0,
+            arrayOf(15.0, 0.0, 152.0, 115.0, 100.0)
+        )
         assertEquals(result, 1.0)
     }
 
@@ -193,7 +197,11 @@ class TrailSimilarityAlgorithmTest(
             mockedAltitudeAdapter
         )
 
-        val result = trailSimilarityAlgorithmUnderTest.runAlgorithm("0", storedTrail1)
+        val result = trailSimilarityAlgorithmUnderTest.runAlgorithm(
+            "0",
+            storedTrail1,
+            arrayOf(15.0, 0.0, 152.141, 115.0, 100.0)
+        )
         assertEquals(result, 0.0)
     }
 
