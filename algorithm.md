@@ -8,9 +8,9 @@ Ex. T1 from cai2hikit, T2 from Hikit
 
 ```
 if((T1.totalRise - T2.totalRise) < 1):
-	rise_value = 0
+	rise_value = 1
 else:
-	rise_value = 1 - (1 / ((T1.totalRise - T2.totalRise)^2))
+	rise_value = 1 / ((T1.totalRise - T2.totalRise)^2)
 ```
 
 The metadata similarity level is then calculated as the average of all the values:
