@@ -48,6 +48,6 @@ class TrailSimilarityAlgorithm @Autowired constructor(
         val trailScore = dtwAlgorithm.runAlgorithm(trailIn_0_Id, trailIn_1)
         println(trailScore)
 
-        return 1.0
+        return(0.6 * trailScore + 0.4 * metaScoresAggregate)
     }
 }
