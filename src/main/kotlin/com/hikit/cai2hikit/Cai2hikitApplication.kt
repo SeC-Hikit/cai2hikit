@@ -10,7 +10,8 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @ComponentScan(
     value =
     ["com.hikit.cai2hikit",
-        "org.hikit.common.adapter"]
+        "org.hikit.common.adapter",
+        "org.hikit.common.processor"]
 )
 class Cai2hikitApplication
 

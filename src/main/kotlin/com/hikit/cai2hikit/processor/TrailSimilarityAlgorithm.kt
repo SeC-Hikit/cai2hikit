@@ -14,13 +14,19 @@ import kotlin.math.pow
 
 @Component
 class TrailSimilarityAlgorithm @Autowired constructor(
-    val trailRepository: TrailRepository,
-    val dtwAlgorithm: DTWAlgorithm,
-    val altitudeServiceAdapter: AltitudeServiceWrapper
+    private val trailRepository: TrailRepository,
+    private val dtwAlgorithm: DTWAlgorithm,
+    private val altitudeServiceAdapter: AltitudeServiceWrapper,
+    private val trailStatsCalculator: TrailsStatsCalculator
 ) {
-    fun runAlgorithm(trailIn_0_Id: String, trailIn_1: Trail, trailIn_1_metadata: Array<Double>): Double {
-        val trailStatsCalculator = TrailsStatsCalculator()
-        val trailIn_0 = trailRepository.findByPropsId(trailIn_0_Id)
+    fun run(trailIn_1: Trail,
+            trailIn_1_metadata: Array<Double>): Double {
+
+        //        val trailIn_0 = trailRepository.findByPropsId(trailIn_0_Id)
+
+        // 1st: take the edge coordinates and geo filter -> intersects: listOf(Trail)
+
+        // 2nd: loop through found trails and calculate score
 
         var metaScores: Array<Double> = arrayOf()
 
