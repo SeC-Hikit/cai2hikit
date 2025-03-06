@@ -1,9 +1,9 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.dto.Coordinates2D
-import com.hikit.cai2hikit.dto.Geometry
-import com.hikit.cai2hikit.dto.Properties
-import com.hikit.cai2hikit.dto.Trail
+import org.hikit.common.dto.Coordinates2D
+import org.hikit.common.dto.Geometry
+import org.hikit.common.dto.Properties
+import org.hikit.common.dto.Trail
 import com.hikit.cai2hikit.processor.DTWAlgorithm
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -40,22 +40,20 @@ private val storedTrail0 = Trail(
         type = "type",
         coordinates = listOf(
             listOf(
-                Coordinates2D(
-                    43.9653826,
-                    11.5473039
-                ),
-                Coordinates2D(
-                    43.9657346,
-                    11.5478117
-                ),
-                Coordinates2D(
-                    43.9659758,
-                    11.5481934
-                ),
-                Coordinates2D(
-                    43.9661336,
-                    11.5484466
-                )
+                43.9653826,
+                11.5473039
+            ),
+            listOf(
+                43.9657346,
+                11.5478117
+            ),
+            listOf(
+                43.9659758,
+                11.5481934
+            ),
+            listOf(
+                43.9661336,
+                11.5484466
             )
         )
     )
@@ -102,22 +100,20 @@ class DTWAlgorithmTest(
                 type = "type",
                 coordinates = listOf(
                     listOf(
-                        Coordinates2D(
-                            43.9653826,
-                            11.5473039
-                        ),
-                        Coordinates2D(
-                            43.8657346,
-                            11.0478117
-                        ),
-                        Coordinates2D(
-                            43.9659758,
-                            11.0481934
-                        ),
-                        Coordinates2D(
-                            43.9661336,
-                            11.5484466
-                        )
+                        43.9653826,
+                        11.5473039
+                    ),
+                    listOf(
+                        43.9657346,
+                        11.5478117
+                    ),
+                    listOf(
+                        43.9659758,
+                        11.5481934
+                    ),
+                    listOf(
+                        43.9661336,
+                        11.5484466
                     )
                 )
             )
@@ -155,22 +151,20 @@ class DTWAlgorithmTest(
                 type = "type",
                 coordinates = listOf(
                     listOf(
-                        Coordinates2D(
-                            43.9653826,
-                            11.5473039
-                        ),
-                        Coordinates2D(
-                            43.8657346,
-                            11.2478117
-                        ),
-                        Coordinates2D(
-                            43.9659758,
-                            11.3481934
-                        ),
-                        Coordinates2D(
-                            43.9661336,
-                            11.5484466
-                        )
+                        43.9653826,
+                        11.5473039
+                    ),
+                    listOf(
+                        43.9657346,
+                        11.5478117
+                    ),
+                    listOf(
+                        43.9659758,
+                        11.5481934
+                    ),
+                    listOf(
+                        43.9661336,
+                        11.5484466
                     )
                 )
             )

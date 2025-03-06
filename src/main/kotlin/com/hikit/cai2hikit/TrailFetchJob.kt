@@ -1,7 +1,7 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.dto.IdToUpdateDate
-import com.hikit.cai2hikit.dto.Trail
+import org.hikit.common.dto.IdToUpdateDate
+import org.hikit.common.dto.Trail
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled

@@ -1,6 +1,6 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.dto.Trail
+import org.hikit.common.dto.Trail
 import com.hikit.cai2hikit.exception.NotFoundException
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.NoHandlerFoundException

@@ -1,8 +1,8 @@
 package com.hikit.cai2hikit.processor
 
 import com.hikit.cai2hikit.TrailRepository
-import com.hikit.cai2hikit.dto.Coordinates2D
-import com.hikit.cai2hikit.dto.Trail
+import org.hikit.common.dto.Coordinates2D
+import org.hikit.common.dto.Trail
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import kotlin.math.min
@@ -13,9 +13,9 @@ import kotlin.math.sqrt
 class DTWAlgorithm @Autowired constructor(
     val trailRepository: TrailRepository
 ) {
-    private fun coordinatesDistance(s: Coordinates2D, t: Coordinates2D): Double {
-        val tempLat = (s.latitude - t.latitude).pow(2)
-        val tempLon = (s.longitude - t.longitude).pow(2)
+    private fun coordinatesDistance(s: List<Double>, t: List<Double>): Double {
+        val tempLat = (s[0] - t[0]).pow(2)
+        val tempLon = (s[1] - t[1]).pow(2)
         return sqrt(tempLat + tempLon)
     }
 

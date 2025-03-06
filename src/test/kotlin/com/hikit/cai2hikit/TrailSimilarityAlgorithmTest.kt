@@ -8,13 +8,14 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-import com.hikit.cai2hikit.dto.Coordinates2D
-import com.hikit.cai2hikit.dto.Geometry
-import com.hikit.cai2hikit.dto.Properties
-import com.hikit.cai2hikit.dto.Trail
+import org.hikit.common.dto.Coordinates2D
+import org.hikit.common.dto.Geometry
+import org.hikit.common.dto.Properties
+import org.hikit.common.dto.Trail
 import com.hikit.cai2hikit.processor.Coordinates
 import com.hikit.cai2hikit.processor.DTWAlgorithm
 import com.hikit.cai2hikit.processor.TrailSimilarityAlgorithm
+import org.hikit.common.processor.TrailsStatsCalculator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyString
@@ -42,26 +43,25 @@ private val storedTrail0 = Trail(
         type = "type",
         coordinates = listOf(
             listOf(
-                Coordinates2D(
-                    43.9653826,
-                    11.5473039
+                43.9653826,
+                11.5473039
+            ),
+            listOf(
+                43.9657346,
+                11.5478117
                 ),
-                Coordinates2D(
-                    43.9657346,
-                    11.5478117
+            listOf(
+                43.9659758,
+                11.5481934
                 ),
-                Coordinates2D(
-                    43.9659758,
-                    11.5481934
-                ),
-                Coordinates2D(
-                    43.9661336,
-                    11.5484466
-                )
+            listOf(
+                43.9661336,
+                11.5484466
             )
         )
     )
 )
+
 
 private val storedTrailWithElevation0: List<Coordinates> = listOf(
     Coordinates(
@@ -106,11 +106,11 @@ class TrailSimilarityAlgorithmTest(
         val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
             mockedTrailRepository,
             dtwUnderTest,
-            mockedAltitudeAdapter
+            mockedAltitudeAdapter,
+            TrailsStatsCalculator()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(
-            "0",
             storedTrail0,
             arrayOf(15.0, 0.0, 152.0, 115.0, 100.0)
         )
@@ -137,22 +137,20 @@ class TrailSimilarityAlgorithmTest(
                 type = "type",
                 coordinates = listOf(
                     listOf(
-                        Coordinates2D(
-                            42.9653826,
-                            12.5473039
-                        ),
-                        Coordinates2D(
-                            42.9657346,
-                            12.5478117
-                        ),
-                        Coordinates2D(
-                            42.9659758,
-                            12.5481934
-                        ),
-                        Coordinates2D(
-                            42.9661336,
-                            12.5484466
-                        )
+                        42.9653826,
+                        12.5473039
+                    ),
+                    listOf(
+                        42.9657346,
+                        12.5478117
+                    ),
+                    listOf(
+                        42.9659758,
+                        12.5481934
+                    ),
+                    listOf(
+                        42.9661336,
+                        12.5484466
                     )
                 )
             )
@@ -194,11 +192,11 @@ class TrailSimilarityAlgorithmTest(
         val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
             mockedTrailRepository,
             dtwUnderTest,
-            mockedAltitudeAdapter
+            mockedAltitudeAdapter,
+            TrailsStatsCalculator()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(
-            "0",
             storedTrail1,
             arrayOf(15.0, 0.0, 152.141, 115.0, 100.0)
         )

@@ -1,6 +1,6 @@
 package com.hikit.cai2hikit.adapter
 
-import com.hikit.cai2hikit.dto.Coordinates2D
+import org.hikit.common.dto.Coordinates2D
 import com.hikit.cai2hikit.processor.Coordinates
 import org.hikit.common.adapter.AltitudeServiceAdapter
 import org.springframework.beans.factory.annotation.Autowired

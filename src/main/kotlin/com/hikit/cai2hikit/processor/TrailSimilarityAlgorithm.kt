@@ -2,8 +2,8 @@ package com.hikit.cai2hikit.processor
 
 import com.hikit.cai2hikit.TrailRepository
 import com.hikit.cai2hikit.adapter.AltitudeServiceWrapper
-import com.hikit.cai2hikit.dto.Coordinates2D
-import com.hikit.cai2hikit.dto.Trail
+import org.hikit.common.dto.Coordinates2D
+import org.hikit.common.dto.Trail
 import org.hikit.common.processor.Coordinates
 import org.hikit.common.processor.TrailsStatsCalculator
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,7 +1,7 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.dto.*
-import com.hikit.cai2hikit.dto.Properties
+import org.hikit.common.dto.*
+import org.hikit.common.dto.Properties
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -127,7 +127,9 @@ class TrailFetchJobTest(
             ),
             geometry = Geometry(
                 type = "type",
-                coordinates = listOf(listOf(Coordinates2D(0.0, 0.0)))
+                coordinates = listOf(
+                    listOf()
+                )
             )
         )
 
