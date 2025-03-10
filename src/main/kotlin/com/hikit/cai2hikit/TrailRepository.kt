@@ -16,34 +16,4 @@ interface TrailRepository : MongoRepository<Trail?, Int?> {
 
     @Query(value = "{ 'properties.ref': ?0 }")
     fun findByRef(ref: String) : List<Trail>
-
-    /*
-    @Query
-    fun findByGeoIntersect() : List<Trail> {
-        return collection.find(
-            Document(
-                    "geometry",
-                    Document(
-                        `$_GEO_INTERSECT`,
-                        Document(
-                            `$_GEOMETRY`, Document(GEO_TYPE, GEO_POLYGON)
-                                .append(
-                                    GEO_COORDINATES,
-                                    listOf(
-                                        listOf(
-                                            geoSquare.getBottomLeft().getAsList(),
-                                            resolvedTopLeftVertex,
-                                            geoSquare.getTopRight().getAsList(),
-                                            resolvedBottomRightVertex,
-                                            geoSquare.getBottomLeft().getAsList()
-                                        )
-                                    )
-                                )
-                        )
-                    )
-                )
-        )
-    }
-    */
-
 }

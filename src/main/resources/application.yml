@@ -10,7 +10,8 @@ job:
 spring:
     data:
       mongodb:
-        database: cai2hikit
+          database: cai2hikit
+          uri: "mongodb://localhost:27017/cai2hikit"
     application:
         name: cai2hikit
 openapi:
