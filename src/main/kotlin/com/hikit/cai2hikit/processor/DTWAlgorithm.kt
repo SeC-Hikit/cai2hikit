@@ -1,8 +1,6 @@
 package com.hikit.cai2hikit.processor
 
 import com.hikit.cai2hikit.TrailRepository
-import org.hikit.common.dto.Coordinates2D
-import org.hikit.common.dto.Trail
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import kotlin.math.min
@@ -14,16 +12,16 @@ class DTWAlgorithm @Autowired constructor(
     val trailRepository: TrailRepository
 ) {
     fun runAlgorithm(coords1: List<List<Double>>, coords2: List<List<Double>>): Double {
-        val DTW = Array(coords1.size) {Array(coords2.size) {99.0}}
-        DTW[0][0] = 0.0
+        val dtw = Array(coords1.size) {Array(coords2.size) {99.0}}
+        dtw[0][0] = 0.0
 
-        for(i in 1 until DTW.size) {
-            for(j in 1 until DTW[i].size) {
+        for(i in 1 until dtw.size) {
+            for(j in 1 until dtw[i].size) {
                 val cost = coordinatesDistance(coords1[i], coords2[j])
-                DTW[i][j] = cost + min(min(DTW[i-1][j], DTW[i][j-1]), DTW[i-1][j-1])
+                dtw[i][j] = cost + min(min(dtw[i-1][j], dtw[i][j-1]), dtw[i-1][j-1])
             }
         }
-        val result = 1.0 - min(DTW[DTW.size - 1][DTW[DTW.size - 1].size - 1], 1.0)
+        val result = 1.0 - min(dtw[dtw.size - 1][dtw[dtw.size - 1].size - 1], 1.0)
 
         return(result)
     }

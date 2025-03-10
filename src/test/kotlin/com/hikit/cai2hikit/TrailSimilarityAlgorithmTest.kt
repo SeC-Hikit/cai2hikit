@@ -17,7 +17,6 @@ import org.hikit.common.processor.TrailsStatsCalculator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.mockito.ArgumentMatchers.anyList
-import org.mockito.ArgumentMatchers.anyString
 
 // Test 1: match 1.0 - perfect match
 // Test 2: match 0.0 - horrible match

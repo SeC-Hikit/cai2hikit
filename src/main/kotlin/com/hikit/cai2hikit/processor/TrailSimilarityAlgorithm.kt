@@ -2,9 +2,7 @@ package com.hikit.cai2hikit.processor
 
 import com.hikit.cai2hikit.TrailRepository
 import com.hikit.cai2hikit.adapter.AltitudeServiceWrapper
-import org.hikit.common.dto.Coordinates2D
 import org.hikit.common.dto.MatchingRequest
-import org.hikit.common.dto.Trail
 import org.hikit.common.processor.Coordinates
 import org.hikit.common.processor.TrailsStatsCalculator
 import org.springframework.beans.factory.annotation.Autowired
@@ -35,7 +33,6 @@ class TrailSimilarityAlgorithm @Autowired constructor(
             val trailWithElevation: List<Coordinates> = altitudeServiceAdapter.mapCoordsWithElevations(trailWithoutElevation)
 
             val trailScore = dtwAlgorithm.runAlgorithm(trailWithoutElevation, requestData.geometry.geoline.coordinates)
-            println("trailScore: $trailScore")
 
             val metaScoresAggregate = computeMetaScores(requestData, trailWithElevation)
             val finalScore = (0.6 * trailScore + 0.4 * metaScoresAggregate)
@@ -45,19 +42,10 @@ class TrailSimilarityAlgorithm @Autowired constructor(
                 bestMatchResult = finalScore
             }
         }
-        println("bestMatchResult: $bestMatchResult")
         return bestMatchResult
     }
 
     fun computeMetaScores(requestData: MatchingRequest, trailIn: List<Coordinates>): Double {
-        println("YES")
-        println(trailStatsCalculator.calculateTotRise(trailIn))
-        println(trailStatsCalculator.calculateTotFall(trailIn))
-        println(trailStatsCalculator.calculateTrailLength(trailIn))
-        println(trailStatsCalculator.calculateHighestPlace(trailIn))
-        println(trailStatsCalculator.calculateLowestPlace(trailIn))
-        println("YES")
-
         val metaScores: Array<Double> = arrayOf(
             1.0 / max(1.0, ((requestData.metadata.totalRise - trailStatsCalculator.calculateTotRise(trailIn))).pow(2)),
             1.0 / max(1.0, ((requestData.metadata.totalFall - trailStatsCalculator.calculateTotFall(trailIn))).pow(2)),
@@ -71,7 +59,6 @@ class TrailSimilarityAlgorithm @Autowired constructor(
             metaScoresAggregate += metaScore
         }
         metaScoresAggregate /= 5.0
-        println(metaScoresAggregate)
 
         return(metaScoresAggregate)
     }
