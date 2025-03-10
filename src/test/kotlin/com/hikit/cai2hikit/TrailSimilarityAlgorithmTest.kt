@@ -8,15 +8,14 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-import org.hikit.common.dto.Coordinates2D
-import org.hikit.common.dto.Geometry
-import org.hikit.common.dto.Properties
-import org.hikit.common.dto.Trail
 import com.hikit.cai2hikit.processor.Coordinates
 import com.hikit.cai2hikit.processor.DTWAlgorithm
 import com.hikit.cai2hikit.processor.TrailSimilarityAlgorithm
+import org.hikit.common.dto.*
+import org.hikit.common.dto.Properties
 import org.hikit.common.processor.TrailsStatsCalculator
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.mockito.ArgumentMatchers.anyList
 import org.mockito.ArgumentMatchers.anyString
 
@@ -62,7 +61,6 @@ private val storedTrail0 = Trail(
     )
 )
 
-
 private val storedTrailWithElevation0: List<Coordinates> = listOf(
     Coordinates(
         43.9653826,
@@ -86,6 +84,41 @@ private val storedTrailWithElevation0: List<Coordinates> = listOf(
     )
 )
 
+val requestData = MatchingRequest(
+    "0",
+    GeometryParent(
+        Geometry(
+            "type",
+            listOf(
+                listOf(
+                    43.9653826,
+                    11.5473039
+                ),
+                listOf(
+                    43.9657346,
+                    11.5478117
+                ),
+                listOf(
+                    43.9659758,
+                    11.5481934
+                ),
+                listOf(
+                    43.9661336,
+                    11.5484466
+                )
+            )
+        )
+    ),
+    StatsTrailMetadata(
+        15.0,
+        0.0,
+        152.14106,
+        0.0,
+        115.0,
+        100.0
+    )
+)
+
 @ExtendWith(MockitoExtension::class)
 class TrailSimilarityAlgorithmTest(
     @Mock val mockedTrailRepository: TrailRepository,
@@ -93,8 +126,8 @@ class TrailSimilarityAlgorithmTest(
 ) {
     @Test
     fun `should check two identical trails`() {
-        `when`(mockedTrailRepository.findByPropsId(anyString()))
-            .thenReturn(storedTrail0)
+        `when`(mockedTrailRepository.findAll())
+            .thenReturn(listOf(storedTrail0))
 
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
             .thenReturn(storedTrailWithElevation0)
@@ -110,10 +143,7 @@ class TrailSimilarityAlgorithmTest(
             TrailsStatsCalculator()
         )
 
-        val result = trailSimilarityAlgorithmUnderTest.run(
-            storedTrail0,
-            arrayOf(15.0, 0.0, 152.0, 115.0, 100.0)
-        )
+        val result = trailSimilarityAlgorithmUnderTest.run(requestData)
         assertEquals(result, 1.0)
     }
 
@@ -156,7 +186,7 @@ class TrailSimilarityAlgorithmTest(
             )
         )
 
-        val storedTrail1WithElevation1: List<Coordinates> = listOf(
+        val storedTrailWithElevation1: List<Coordinates> = listOf(
             Coordinates(
                 42.9653826,
                 12.5473039,
@@ -165,7 +195,7 @@ class TrailSimilarityAlgorithmTest(
             Coordinates(
                 42.9657346,
                 12.5478117,
-                305.0
+                290.0
             ),
             Coordinates(
                 42.9659758,
@@ -179,11 +209,11 @@ class TrailSimilarityAlgorithmTest(
             )
         )
 
-        `when`(mockedTrailRepository.findByPropsId(anyString()))
-            .thenReturn(storedTrail0)
+        `when`(mockedTrailRepository.findAll())
+            .thenReturn(listOf(storedTrail1))
 
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
-            .thenReturn(storedTrailWithElevation0)
+            .thenReturn(storedTrailWithElevation1)
 
         val dtwUnderTest = DTWAlgorithm(
             mockedTrailRepository
@@ -196,16 +226,174 @@ class TrailSimilarityAlgorithmTest(
             TrailsStatsCalculator()
         )
 
-        val result = trailSimilarityAlgorithmUnderTest.run(
-            storedTrail1,
-            arrayOf(15.0, 0.0, 152.141, 115.0, 100.0)
-        )
-        assertEquals(result, 0.0)
+        val result = trailSimilarityAlgorithmUnderTest.run(requestData)
+        assertTrue(result < 0.1)
     }
 
     @Test
-    fun `should check data match, geometry mismatch`() {}
+    fun `should check data match, geometry mismatch`() {
+        val storedTrail1 = Trail(
+            properties = Properties(
+                "1",
+                1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                4,
+                Date(),
+                Date(),
+            ),
+            geometry = Geometry(
+                type = "type",
+                coordinates = listOf(
+                    listOf(
+                        42.9653826,
+                        12.5473039
+                    ),
+                    listOf(
+                        42.9657346,
+                        12.5478117
+                    ),
+                    listOf(
+                        42.9659758,
+                        12.5481934
+                    ),
+                    listOf(
+                        42.9661336,
+                        12.5484466
+                    )
+                )
+            )
+        )
+
+        val storedTrailWithElevation1: List<Coordinates> = listOf(
+            Coordinates(
+                42.9653826,
+                12.5473039,
+                100.0
+            ),
+            Coordinates(
+                42.9657346,
+                12.5478117,
+                105.0
+            ),
+            Coordinates(
+                42.9659758,
+                12.5481934,
+                110.0
+            ),
+            Coordinates(
+                42.9661336,
+                12.5484466,
+                115.0
+            )
+        )
+
+        `when`(mockedTrailRepository.findAll())
+            .thenReturn(listOf(storedTrail1))
+
+        `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
+            .thenReturn(storedTrailWithElevation1)
+
+        val dtwUnderTest = DTWAlgorithm(
+            mockedTrailRepository
+        )
+
+        val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
+            mockedTrailRepository,
+            dtwUnderTest,
+            mockedAltitudeAdapter,
+            TrailsStatsCalculator()
+        )
+
+        val result = trailSimilarityAlgorithmUnderTest.run(requestData)
+        assertTrue(0.35 < result && result < 0.45)
+    }
 
     @Test
-    fun `should check data mismatch, geometry match`() {}
+    fun `should check data mismatch, geometry match`() {
+        val storedTrail1 = Trail(
+            properties = Properties(
+                "1",
+                1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                4,
+                Date(),
+                Date(),
+            ),
+            geometry = Geometry(
+                type = "type",
+                coordinates = listOf(
+                    listOf(
+                        43.9653826,
+                        11.5473039
+                    ),
+                    listOf(
+                        43.9657346,
+                        11.5478117
+                    ),
+                    listOf(
+                        43.9659758,
+                        11.5481934
+                    ),
+                    listOf(
+                        43.9661336,
+                        11.5484466
+                    )
+                )
+            )
+        )
+
+
+        val storedTrailWithElevation1: List<Coordinates> = listOf(
+            Coordinates(
+                43.9653826,
+                11.5473039,
+                10.0
+            ),
+            Coordinates(
+                43.9657346,
+                11.5478117,
+                1050.0
+            ),
+            Coordinates(
+                43.9659758,
+                11.5481934,
+                110.0
+            ),
+            Coordinates(
+                43.9661336,
+                11.5484466,
+                1150.0
+            )
+        )
+
+        `when`(mockedTrailRepository.findAll())
+            .thenReturn(listOf(storedTrail1))
+
+        `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
+            .thenReturn(storedTrailWithElevation1)
+
+        val dtwUnderTest = DTWAlgorithm(
+            mockedTrailRepository
+        )
+
+        val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
+            mockedTrailRepository,
+            dtwUnderTest,
+            mockedAltitudeAdapter,
+            TrailsStatsCalculator()
+        )
+
+        val result = trailSimilarityAlgorithmUnderTest.run(requestData)
+        assertTrue(0.55 < result && result < 0.65)
+    }
 }

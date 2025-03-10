@@ -20,7 +20,7 @@ class TrailSimilarityAlgorithm @Autowired constructor(
     private val altitudeServiceAdapter: AltitudeServiceWrapper,
     private val trailStatsCalculator: TrailsStatsCalculator
 ) {
-    fun run(requestData: MatchingRequest): String {
+    fun run(requestData: MatchingRequest): Double {
 
         // 1st: take the edge coordinates and geo filter -> intersects: listOf(Trail)
 
@@ -28,7 +28,7 @@ class TrailSimilarityAlgorithm @Autowired constructor(
 
 //        var bestMatchingResult: Pair<String, Double> = Pair("", 99.0)
         var bestMatchId = ""
-        var bestMatchResult = 99.0
+        var bestMatchResult = 0.0
 
         for (trail in trailRepository.findAll()) {
             val trailWithoutElevation: List<List<Double>> = trail!!.geometry.coordinates
@@ -40,16 +40,24 @@ class TrailSimilarityAlgorithm @Autowired constructor(
             val metaScoresAggregate = computeMetaScores(requestData, trailWithElevation)
             val finalScore = (0.6 * trailScore + 0.4 * metaScoresAggregate)
 
-            if (finalScore < bestMatchResult) {
+            if (finalScore > bestMatchResult) {
                 bestMatchId = trail.properties.id
                 bestMatchResult = finalScore
             }
         }
-
-        return bestMatchId
+        println("bestMatchResult: $bestMatchResult")
+        return bestMatchResult
     }
 
     fun computeMetaScores(requestData: MatchingRequest, trailIn: List<Coordinates>): Double {
+        println("YES")
+        println(trailStatsCalculator.calculateTotRise(trailIn))
+        println(trailStatsCalculator.calculateTotFall(trailIn))
+        println(trailStatsCalculator.calculateTrailLength(trailIn))
+        println(trailStatsCalculator.calculateHighestPlace(trailIn))
+        println(trailStatsCalculator.calculateLowestPlace(trailIn))
+        println("YES")
+
         val metaScores: Array<Double> = arrayOf(
             1.0 / max(1.0, ((requestData.metadata.totalRise - trailStatsCalculator.calculateTotRise(trailIn))).pow(2)),
             1.0 / max(1.0, ((requestData.metadata.totalFall - trailStatsCalculator.calculateTotFall(trailIn))).pow(2)),
