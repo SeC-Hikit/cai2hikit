@@ -17,6 +17,7 @@ interface TrailRepository : MongoRepository<Trail?, Int?> {
     @Query(value = "{ 'properties.ref': ?0 }")
     fun findByRef(ref: String) : List<Trail>
 
+    /*
     @Query
     fun findByGeoIntersect() : List<Trail> {
         return collection.find(
@@ -43,4 +44,6 @@ interface TrailRepository : MongoRepository<Trail?, Int?> {
                 )
         )
     }
+    */
+
 }
