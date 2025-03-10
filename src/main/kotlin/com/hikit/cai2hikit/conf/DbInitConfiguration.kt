@@ -8,7 +8,7 @@ import org.hikit.common.dto.Trail
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 
-public const val trailCollection = "trail"
+const val trailCollection = "trail"
 private const val geometryField = "geometry"
 
 @Configuration

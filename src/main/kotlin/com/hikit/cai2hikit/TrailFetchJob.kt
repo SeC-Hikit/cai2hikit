@@ -1,5 +1,6 @@
 package com.hikit.cai2hikit
 
+import com.hikit.cai2hikit.dao.GeometryMapper
 import org.hikit.common.dto.IdToUpdateDate
 import org.hikit.common.dto.Trail
 import org.slf4j.Logger
@@ -12,7 +13,8 @@ import java.time.LocalDateTime
 @Service
 class TrailFetchJob(
     val trailRestClient: TrailRestClient,
-    val trailRepository: TrailRepository
+    val trailRepository: TrailRepository,
+    val geometryMapper: GeometryMapper
 ) {
     private val logger: Logger = LoggerFactory.getLogger(TrailFetchJob::class.java)
 
@@ -38,13 +40,14 @@ class TrailFetchJob(
         fetchedTrail: Trail,
         trailToLastUpdate: IdToUpdateDate
     ) {
-        val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail!!.properties.id)
+        val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail.properties.id)
+        val trailForSaving = com.hikit.cai2hikit.dao.Trail(fetchedTrail.properties, geometryMapper.map(fetchedTrail.geometry))
         if (previouslySavedTrail == null) {
-            trailRepository.insert(fetchedTrail)
+            trailRepository.insert(trailForSaving)
         } else if (previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {
             logger.info("Trail with id ${trailToLastUpdate.id} updated by newly fetched $fetchedTrail")
             previouslySavedTrail.properties = fetchedTrail.properties
-            previouslySavedTrail.geometry = fetchedTrail.geometry
+            previouslySavedTrail.geometry = trailForSaving.geometry
             trailRepository.save(previouslySavedTrail)
         } else {
             logger.debug("Trail with id ${trailToLastUpdate.id} is already up to date")

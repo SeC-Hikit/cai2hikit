@@ -1,11 +1,11 @@
 package com.hikit.cai2hikit
 
-import org.hikit.common.dto.Coordinates2D
+import com.hikit.cai2hikit.processor.DTWAlgorithm
 import org.hikit.common.dto.Geometry
 import org.hikit.common.dto.Properties
 import org.hikit.common.dto.Trail
-import com.hikit.cai2hikit.processor.DTWAlgorithm
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock

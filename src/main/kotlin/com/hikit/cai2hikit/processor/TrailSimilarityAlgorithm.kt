@@ -30,7 +30,9 @@ class TrailSimilarityAlgorithm @Autowired constructor(
             val trailWithoutElevation: List<List<Double>> = trail!!.geometry.coordinates
             val trailWithElevation: List<Coordinates> = altitudeServiceAdapter.mapCoordsWithElevations(trailWithoutElevation)
 
-            val trailScore = dtwAlgorithm.runAlgorithm(trailWithoutElevation, requestData.geometry.geoline.coordinates)
+//            val trailScore = dtwAlgorithm.runAlgorithm(trailWithoutElevation, requestData.geometry.geoline.coordinates)
+//            TODO: reconvert object to DTO
+            val trailScore = dtwAlgorithm.runAlgorithm(trailWithoutElevation, emptyList())
 
             val metaScoresAggregate = computeMetaScores(requestData, trailWithElevation)
             val finalScore = (0.6 * trailScore + 0.4 * metaScoresAggregate)

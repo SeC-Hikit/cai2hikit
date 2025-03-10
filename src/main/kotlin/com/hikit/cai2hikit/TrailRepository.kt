@@ -1,12 +1,9 @@
 package com.hikit.cai2hikit
 
-import org.hikit.common.dto.Trail
-import org.bson.Document
-import org.hikit.common.datasource.MongoUtils.*
+import com.hikit.cai2hikit.dao.Trail
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
-import java.util.*
 
 
 @RepositoryRestResource(collectionResourceRel = "trails", path = "trails")
