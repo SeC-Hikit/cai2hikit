@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service
 class AltitudeServiceWrapper @Autowired constructor(
     private val altitudeServiceAdapter: AltitudeServiceAdapter
 ) {
-    fun mapCoordsWithElevations(coordinates: List<Coordinates2D>): List<Coordinates> =
-        altitudeServiceAdapter.getElevationsByLongLat(coordinates.map { Pair(it.latitude, it.longitude) })
+    fun mapCoordsWithElevations(coordinates: List<List<Double>>): List<Coordinates> =
+        altitudeServiceAdapter.getElevationsByLongLat(coordinates.map { Pair(it[0], it[1]) })
             .mapIndexed{ index, altitude ->
                 Coordinates(
-                    coordinates[index].latitude,
-                    coordinates[index].longitude, altitude
+                    coordinates[index][0],
+                    coordinates[index][1], altitude
                 )
             }
 
