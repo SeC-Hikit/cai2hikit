@@ -18,15 +18,13 @@ class TrailSimilarityAlgorithm @Autowired constructor(
     private val altitudeServiceAdapter: AltitudeServiceWrapper,
     private val trailStatsCalculator: TrailsStatsCalculator
 ) {
-    fun run(requestData: MatchingRequest): Double {
+    fun run(requestData: MatchingRequest): Pair<String, Double> {
 
         // 1st: take the edge coordinates and geo filter -> intersects: listOf(Trail)
 
         // 2nd: loop through found trails and calculate score
 
-//        var bestMatchingResult: Pair<String, Double> = Pair("", 99.0)
-        var bestMatchId = ""
-        var bestMatchResult = 0.0
+        var bestMatchResult: Pair<String, Double> = Pair("", 0.0)
 
         for (trail in trailRepository.findAll()) {
             val trailWithoutElevation: List<List<Double>> = trail!!.geometry.coordinates
@@ -37,9 +35,8 @@ class TrailSimilarityAlgorithm @Autowired constructor(
             val metaScoresAggregate = computeMetaScores(requestData, trailWithElevation)
             val finalScore = (0.6 * trailScore + 0.4 * metaScoresAggregate)
 
-            if (finalScore > bestMatchResult) {
-                bestMatchId = trail.properties.id
-                bestMatchResult = finalScore
+            if (finalScore > bestMatchResult.second) {
+                bestMatchResult = Pair(trail.properties.id, finalScore)
             }
         }
         return bestMatchResult

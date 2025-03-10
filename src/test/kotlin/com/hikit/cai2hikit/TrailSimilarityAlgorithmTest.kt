@@ -143,7 +143,7 @@ class TrailSimilarityAlgorithmTest(
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertEquals(result, 1.0)
+        assertEquals(result.second, 1.0)
     }
 
     @Test
@@ -226,7 +226,7 @@ class TrailSimilarityAlgorithmTest(
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertTrue(result < 0.1)
+        assertTrue(result.second < 0.1)
     }
 
     @Test
@@ -309,7 +309,7 @@ class TrailSimilarityAlgorithmTest(
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertTrue(0.35 < result && result < 0.45)
+        assertTrue(0.35 < result.second && result.second < 0.45)
     }
 
     @Test
@@ -393,6 +393,6 @@ class TrailSimilarityAlgorithmTest(
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertTrue(0.55 < result && result < 0.65)
+        assertTrue(0.55 < result.second && result.second < 0.65)
     }
 }
