@@ -7,7 +7,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 
 @Service
@@ -41,7 +40,7 @@ class TrailFetchJob(
         trailToLastUpdate: IdToUpdateDate
     ) {
         val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail.properties.id)
-        val trailForSaving = com.hikit.cai2hikit.dao.Trail(fetchedTrail.properties, geometryMapper.map(fetchedTrail.geometry))
+        val trailForSaving = com.hikit.cai2hikit.dao.Trail(fetchedTrail.properties, geometryMapper.mapToData(fetchedTrail.geometry))
         if (previouslySavedTrail == null) {
             trailRepository.insert(trailForSaving)
         } else if (previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {

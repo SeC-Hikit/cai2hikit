@@ -5,7 +5,7 @@ import org.hikit.common.processor.Coordinates
 data class Coordinates(
     private val longitude: Double,
     private val latitude: Double,
-    private val altitude: Double
+    private val altitude: Double = 0.0
 ) : Coordinates {
     override fun getLongitude() = longitude
     override fun getLatitude() = latitude

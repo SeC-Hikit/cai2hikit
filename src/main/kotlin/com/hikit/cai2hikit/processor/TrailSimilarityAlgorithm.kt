@@ -1,8 +1,10 @@
 package com.hikit.cai2hikit.processor
 
-import com.hikit.cai2hikit.TrailRepository
+import com.hikit.cai2hikit.GeoTrailRepository
 import com.hikit.cai2hikit.adapter.AltitudeServiceWrapper
 import org.hikit.common.dto.MatchingRequest
+import org.hikit.common.dto.TrailToScore
+import org.hikit.common.geo.CoordinatesRectangle
 import org.hikit.common.processor.Coordinates
 import org.hikit.common.processor.TrailsStatsCalculator
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,37 +13,39 @@ import kotlin.math.max
 import kotlin.math.pow
 
 
+private const val matchingScoreWeight = 0.6
+
+private const val metaScoreWeight = 0.4
+
 @Component
 class TrailSimilarityAlgorithm @Autowired constructor(
-    private val trailRepository: TrailRepository,
     private val dtwAlgorithm: DTWAlgorithm,
     private val altitudeServiceAdapter: AltitudeServiceWrapper,
-    private val trailStatsCalculator: TrailsStatsCalculator
+    private val trailStatsCalculator: TrailsStatsCalculator,
+    private val geoTrailRepository: GeoTrailRepository,
 ) {
-    fun run(requestData: MatchingRequest): Pair<String, Double> {
+    fun run(requestData: MatchingRequest): List<TrailToScore> {
 
         // 1st: take the edge coordinates and geo filter -> intersects: listOf(Trail)
+        val foundByIntersecting = geoTrailRepository.findByIntersection(
+            getOuterSquareForCoordinates(requestData.coordinates)
+        )
 
-        // 2nd: loop through found trails and calculate score
 
-        var bestMatchResult: Pair<String, Double> = Pair("", 0.0)
+        val trailToScores = foundByIntersecting.map {
+            val trailWithoutElevation = it.geometry.coordinates
+            val line = it.geometry.coordinates.first()
+            val requestedTrailCoords: List<Coordinates> =
+                altitudeServiceAdapter.mapCoordsWithElevations(line)
+            val trailScore = dtwAlgorithm.runAlgorithm(trailWithoutElevation, requestedTrailCoords)
 
-        for (trail in trailRepository.findAll()) {
-            val trailWithoutElevation: List<List<Double>> = trail!!.geometry.coordinates
-            val trailWithElevation: List<Coordinates> = altitudeServiceAdapter.mapCoordsWithElevations(trailWithoutElevation)
+            val metaScoresAggregate = computeMetaScores(requestData, requestedTrailCoords)
+            val finalScore = (matchingScoreWeight * trailScore + metaScoreWeight * metaScoresAggregate)
 
-//            val trailScore = dtwAlgorithm.runAlgorithm(trailWithoutElevation, requestData.geometry.geoline.coordinates)
-//            TODO: reconvert object to DTO
-            val trailScore = dtwAlgorithm.runAlgorithm(trailWithoutElevation, emptyList())
-
-            val metaScoresAggregate = computeMetaScores(requestData, trailWithElevation)
-            val finalScore = (0.6 * trailScore + 0.4 * metaScoresAggregate)
-
-            if (finalScore > bestMatchResult.second) {
-                bestMatchResult = Pair(trail.properties.id, finalScore)
-            }
+            TrailToScore(it, finalScore.toInt())
         }
-        return bestMatchResult
+
+        return trailToScores
     }
 
     fun computeMetaScores(requestData: MatchingRequest, trailIn: List<Coordinates>): Double {
@@ -61,4 +65,16 @@ class TrailSimilarityAlgorithm @Autowired constructor(
 
         return(metaScoresAggregate)
     }
+
+    fun getOuterSquareForCoordinates(
+        coordinates2D: List<Coordinates>,
+        paddingDistance: Double = 0.0
+    ): CoordinatesRectangle {
+        val topRight = Coordinates(coordinates2D.maxOf { it.longitude + paddingDistance },
+            coordinates2D.maxOf { it.latitude + paddingDistance })
+        val bottomLeft = Coordinates(coordinates2D.minOf { it.longitude - paddingDistance },
+            coordinates2D.minOf { it.latitude - paddingDistance })
+        return CoordinatesRectangle(bottomLeft, topRight)
+    }
+
 }
