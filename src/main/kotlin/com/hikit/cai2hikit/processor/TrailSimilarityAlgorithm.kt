@@ -31,13 +31,11 @@ class TrailSimilarityAlgorithm @Autowired constructor(
             getOuterSquareForCoordinates(requestData.coordinates)
         )
 
-
         val trailToScores = foundByIntersecting.map {
-            val trailWithoutElevation = it.geometry.coordinates
             val line = it.geometry.coordinates.first()
             val requestedTrailCoords: List<Coordinates> =
                 altitudeServiceAdapter.mapCoordsWithElevations(line)
-            val trailScore = dtwAlgorithm.runAlgorithm(trailWithoutElevation, requestedTrailCoords)
+            val trailScore = dtwAlgorithm.run(requestedTrailCoords, requestedTrailCoords)
 
             val metaScoresAggregate = computeMetaScores(requestData, requestedTrailCoords)
             val finalScore = (matchingScoreWeight * trailScore + metaScoreWeight * metaScoresAggregate)
@@ -45,7 +43,7 @@ class TrailSimilarityAlgorithm @Autowired constructor(
             TrailToScore(it, finalScore.toInt())
         }
 
-        return trailToScores
+        return trailToScores.sortedBy { it.accuracy }.subList(0, 10)
     }
 
     fun computeMetaScores(requestData: MatchingRequest, trailIn: List<Coordinates>): Double {

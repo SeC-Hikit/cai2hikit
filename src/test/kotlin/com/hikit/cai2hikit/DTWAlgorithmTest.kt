@@ -75,7 +75,7 @@ class DTWAlgorithmTest(
             mockedTrailRepository
         )
 
-        val result = DTWUnderTest.runAlgorithm(
+        val result = DTWUnderTest.run(
             storedTrail0.geometry.coordinates,
             storedTrail0.geometry.coordinates
         )
@@ -129,7 +129,7 @@ class DTWAlgorithmTest(
             mockedTrailRepository
         )
 
-        val result = DTWUnderTest.runAlgorithm(
+        val result = DTWUnderTest.run(
             storedTrail0.geometry.coordinates,
             storedTrail1.geometry.coordinates
         )
@@ -183,7 +183,7 @@ class DTWAlgorithmTest(
             mockedTrailRepository
         )
 
-        val result = DTWUnderTest.runAlgorithm(
+        val result = DTWUnderTest.run(
             storedTrail0.geometry.coordinates,
             storedTrail1.geometry.coordinates
         )
