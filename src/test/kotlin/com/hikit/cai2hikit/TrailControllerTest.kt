@@ -1,8 +1,8 @@
 package com.hikit.cai2hikit
 
-import org.hikit.common.dto.Geometry
+import com.hikit.cai2hikit.dao.Geometry
+import com.hikit.cai2hikit.dao.Trail
 import org.hikit.common.dto.Properties
-import org.hikit.common.dto.Trail
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock

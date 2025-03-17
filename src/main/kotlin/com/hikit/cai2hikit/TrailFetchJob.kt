@@ -1,8 +1,10 @@
 package com.hikit.cai2hikit
 
+import com.hikit.cai2hikit.dao.Geometry as daoGeometry
 import com.hikit.cai2hikit.dao.GeometryMapper
 import org.hikit.common.dto.IdToUpdateDate
-import org.hikit.common.dto.Trail
+import org.hikit.common.dto.Trail as dtoTrail
+import com.hikit.cai2hikit.dao.Trail as daoTrail
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -36,11 +38,12 @@ class TrailFetchJob(
     }
 
     private fun upsertMoreRecentData(
-        fetchedTrail: Trail,
+        fetchedTrail: dtoTrail,
         trailToLastUpdate: IdToUpdateDate
     ) {
         val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail.properties.id)
-        val trailForSaving = com.hikit.cai2hikit.dao.Trail(fetchedTrail.properties, geometryMapper.mapToData(fetchedTrail.geometry))
+        println(fetchedTrail.geometry)
+        val trailForSaving = daoTrail(fetchedTrail.properties, daoGeometry("", fetchedTrail.geometry.coordinates))
         if (previouslySavedTrail == null) {
             trailRepository.insert(trailForSaving)
         } else if (previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {

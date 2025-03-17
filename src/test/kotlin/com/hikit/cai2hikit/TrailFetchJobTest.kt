@@ -1,5 +1,6 @@
 package com.hikit.cai2hikit
 
+import com.hikit.cai2hikit.dao.GeometryMapper
 import org.hikit.common.dto.*
 import org.hikit.common.dto.Properties
 import org.junit.jupiter.api.Test
@@ -16,7 +17,8 @@ import java.util.*
 @ExtendWith(MockitoExtension::class)
 class TrailFetchJobTest(
     @Mock val mockedTrailClient: TrailRestClient,
-    @Mock val mockedTrailRepository: TrailRepository
+    @Mock val mockedTrailRepository: TrailRepository,
+    @Mock val mockedGeometryMapper: GeometryMapper
 ) {
     @Test
     fun `should test retrieving one trail member calls`() {
@@ -48,7 +50,11 @@ class TrailFetchJobTest(
 
         `when`(mockedTrailClient.fetchTrailIdsWithinBoundBox())
             .thenReturn(listOf(IdToUpdateDate(expectedId, LocalDateTime.now())))
-        val systemUnderTest = TrailFetchJob(mockedTrailClient, mockedTrailRepository)
+        val systemUnderTest = TrailFetchJob(
+            mockedTrailClient,
+            mockedTrailRepository,
+            mockedGeometryMapper
+        )
 
         // when
         systemUnderTest.updateSystem()
@@ -87,7 +93,11 @@ class TrailFetchJobTest(
 
         `when`(mockedTrailClient.fetchTrailIdsWithinBoundBox())
             .thenReturn(listOf(IdToUpdateDate(expectedId, LocalDateTime.now())))
-        val systemUnderTest = TrailFetchJob(mockedTrailClient, mockedTrailRepository)
+        val systemUnderTest = TrailFetchJob(
+            mockedTrailClient,
+            mockedTrailRepository,
+            mockedGeometryMapper
+        )
 
         // when
         systemUnderTest.updateSystem()
@@ -107,9 +117,16 @@ class TrailFetchJobTest(
         val savedTrail = Trail(
             properties = Properties(
                 expectedId,
-                123, "updatedSource", "EE",
-                "Monzuno", "Vado", "", "",
-                123, Date(), getDate(someSavedDate)
+                123,
+                "updatedSource",
+                "EE",
+                "Monzuno",
+                "Vado",
+                "",
+                "",
+                123,
+                Date(),
+                getDate(someSavedDate)
             ),
             geometry = Geometry(
                 type = "type",
@@ -137,7 +154,11 @@ class TrailFetchJobTest(
         doReturn(savedTrail).`when`(mockedTrailRepository).findByPropsId(expectedId)
         doReturn(listOf(IdToUpdateDate(expectedId, LocalDateTime.now()))).`when`(mockedTrailClient).fetchTrailIdsWithinBoundBox()
 
-        val systemUnderTest = TrailFetchJob(mockedTrailClient, mockedTrailRepository)
+        val systemUnderTest = TrailFetchJob(
+            mockedTrailClient,
+            mockedTrailRepository,
+            mockedGeometryMapper
+        )
 
         // when
         systemUnderTest.updateSystem()
@@ -156,7 +177,11 @@ class TrailFetchJobTest(
         val expectedId = "any"
         doReturn(listOf(IdToUpdateDate(expectedId, LocalDateTime.now()))).`when`(mockedTrailClient).fetchTrailIdsWithinBoundBox()
         doReturn(null).`when`(mockedTrailClient).fetchTrail(expectedId)
-        val systemUnderTest = TrailFetchJob(mockedTrailClient, mockedTrailRepository)
+        val systemUnderTest = TrailFetchJob(
+            mockedTrailClient,
+            mockedTrailRepository,
+            mockedGeometryMapper
+        )
 
         // when
         systemUnderTest.updateSystem()

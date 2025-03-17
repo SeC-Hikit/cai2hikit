@@ -1,6 +1,7 @@
 package com.hikit.cai2hikit
 
 import com.hikit.cai2hikit.adapter.AltitudeServiceWrapper
+import com.hikit.cai2hikit.dao.GeometryMapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -8,6 +9,8 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
+import com.hikit.cai2hikit.dao.Trail as daoTrail
+import com.hikit.cai2hikit.dao.Geometry as daoGeometry
 import com.hikit.cai2hikit.processor.Coordinates
 import com.hikit.cai2hikit.processor.DTWAlgorithm
 import com.hikit.cai2hikit.processor.TrailSimilarityAlgorithm
@@ -23,8 +26,8 @@ import org.mockito.ArgumentMatchers.anyList
 // Test 3: match ±0.60 - match dati geografici perfetto, match dati calcolati completamente KO
 // Test 4: match ±0.40 - match dati geografici KO, perfect match dati calcolati completamente
 
-private val storedTrail0 = Trail(
-    properties = Properties(
+private val storedTrail0 = daoTrail(
+    Properties(
         "1",
         1,
         "",
@@ -37,9 +40,9 @@ private val storedTrail0 = Trail(
         Date(),
         Date(),
     ),
-    geometry = Geometry(
-        type = "type",
-        coordinates = listOf(
+    daoGeometry(
+        "",
+        listOf(
             listOf(
                 43.9653826,
                 11.5473039
@@ -85,27 +88,22 @@ private val storedTrailWithElevation0: List<Coordinates> = listOf(
 
 val requestData = MatchingRequest(
     "0",
-    GeometryParent(
-        Geometry(
-            "type",
-            listOf(
-                listOf(
-                    43.9653826,
-                    11.5473039
-                ),
-                listOf(
-                    43.9657346,
-                    11.5478117
-                ),
-                listOf(
-                    43.9659758,
-                    11.5481934
-                ),
-                listOf(
-                    43.9661336,
-                    11.5484466
-                )
-            )
+    listOf(
+        Coordinates(
+            43.9653826,
+            11.5473039
+        ),
+        Coordinates(
+            43.9657346,
+            11.5478117
+        ),
+        Coordinates(
+            43.9659758,
+            11.5481934
+        ),
+        Coordinates(
+            43.9661336,
+            11.5484466
         )
     ),
     StatsTrailMetadata(
@@ -121,7 +119,8 @@ val requestData = MatchingRequest(
 @ExtendWith(MockitoExtension::class)
 class TrailSimilarityAlgorithmTest(
     @Mock val mockedTrailRepository: TrailRepository,
-    @Mock val mockedAltitudeAdapter: AltitudeServiceWrapper
+    @Mock val mockedAltitudeAdapter: AltitudeServiceWrapper,
+    @Mock val mockedGeoTrailRepository: GeoTrailRepository
 ) {
     @Test
     fun `should check two identical trails`() {
@@ -131,19 +130,18 @@ class TrailSimilarityAlgorithmTest(
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
             .thenReturn(storedTrailWithElevation0)
 
-        val dtwUnderTest = DTWAlgorithm(
-            mockedTrailRepository
-        )
+        val dtwUnderTest = DTWAlgorithm()
 
         val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
-            mockedTrailRepository,
             dtwUnderTest,
             mockedAltitudeAdapter,
-            TrailsStatsCalculator()
+            TrailsStatsCalculator(),
+            mockedGeoTrailRepository,
+            GeometryMapper()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertEquals(result.second, 1.0)
+        assertEquals(result[0].accuracy, 1.0)
     }
 
     @Test
@@ -208,25 +206,24 @@ class TrailSimilarityAlgorithmTest(
             )
         )
 
-        `when`(mockedTrailRepository.findAll())
-            .thenReturn(listOf(storedTrail1))
+//        `when`(mockedTrailRepository.findAll())
+//            .thenReturn(listOf(storedTrail1))
 
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
             .thenReturn(storedTrailWithElevation1)
 
-        val dtwUnderTest = DTWAlgorithm(
-            mockedTrailRepository
-        )
+        val dtwUnderTest = DTWAlgorithm()
 
         val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
-            mockedTrailRepository,
             dtwUnderTest,
             mockedAltitudeAdapter,
-            TrailsStatsCalculator()
+            TrailsStatsCalculator(),
+            mockedGeoTrailRepository,
+            GeometryMapper()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertTrue(result.second < 0.1)
+        assertTrue(result[0].accuracy < 0.1)
     }
 
     @Test
@@ -291,25 +288,21 @@ class TrailSimilarityAlgorithmTest(
             )
         )
 
-        `when`(mockedTrailRepository.findAll())
-            .thenReturn(listOf(storedTrail1))
-
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
             .thenReturn(storedTrailWithElevation1)
 
-        val dtwUnderTest = DTWAlgorithm(
-            mockedTrailRepository
-        )
+        val dtwUnderTest = DTWAlgorithm()
 
         val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
-            mockedTrailRepository,
             dtwUnderTest,
             mockedAltitudeAdapter,
-            TrailsStatsCalculator()
+            TrailsStatsCalculator(),
+            mockedGeoTrailRepository,
+            GeometryMapper()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertTrue(0.35 < result.second && result.second < 0.45)
+        assertTrue(0.35 < result[0].accuracy && result[0].accuracy < 0.45)
     }
 
     @Test
@@ -375,24 +368,20 @@ class TrailSimilarityAlgorithmTest(
             )
         )
 
-        `when`(mockedTrailRepository.findAll())
-            .thenReturn(listOf(storedTrail1))
-
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
             .thenReturn(storedTrailWithElevation1)
 
-        val dtwUnderTest = DTWAlgorithm(
-            mockedTrailRepository
-        )
+        val dtwUnderTest = DTWAlgorithm()
 
         val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
-            mockedTrailRepository,
             dtwUnderTest,
             mockedAltitudeAdapter,
-            TrailsStatsCalculator()
+            TrailsStatsCalculator(),
+            mockedGeoTrailRepository,
+            GeometryMapper()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertTrue(0.55 < result.second && result.second < 0.65)
+        assertTrue(0.55 < result[0].accuracy && result[0].accuracy < 0.65)
     }
 }

@@ -12,12 +12,10 @@ class GeometryMapper {
     }
 
     fun mapToData(toMap: org.hikit.common.dto.Geometry): Geometry {
-        return Geometry("LineString",
-            toMap.coordinates)
+        return Geometry(toMap.type, toMap.coordinates)
     }
 
     fun mapToDto(toMap: Geometry): org.hikit.common.dto.Geometry {
-        return org.hikit.common.dto.Geometry("MultiLineString",
-            toMap.coordinates)
+        return org.hikit.common.dto.Geometry(toMap.type, toMap.coordinates)
     }
 }
