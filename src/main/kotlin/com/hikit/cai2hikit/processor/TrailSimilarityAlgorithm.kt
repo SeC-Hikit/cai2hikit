@@ -14,8 +14,9 @@ import kotlin.math.pow
 
 
 private const val matchingScoreWeight = 0.6
-
 private const val metaScoreWeight = 0.4
+
+private const val metascoresNumber = 5.0
 
 @Component
 class TrailSimilarityAlgorithm @Autowired constructor(
@@ -55,11 +56,8 @@ class TrailSimilarityAlgorithm @Autowired constructor(
             1.0 / max(1.0, ((requestData.metadata.lowest - trailStatsCalculator.calculateLowestPlace(trailIn))).pow(2))
         )
 
-        var metaScoresAggregate = 0.0
-        for (metaScore in metaScores) {
-            metaScoresAggregate += metaScore
-        }
-        metaScoresAggregate /= 5.0
+        // calculate average
+        val metaScoresAggregate = metaScores.sum() / metascoresNumber
 
         return(metaScoresAggregate)
     }
