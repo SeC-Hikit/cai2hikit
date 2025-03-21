@@ -12,6 +12,9 @@ import java.util.*
 import com.hikit.cai2hikit.dao.Trail as daoTrail
 import com.hikit.cai2hikit.dao.Geometry as daoGeometry
 import com.hikit.cai2hikit.processor.Coordinates
+import org.hikit.common.dto.Trail as dtoTrail
+import org.hikit.common.dto.Geometry as dtoGeometry
+import org.hikit.common.processor.Coordinates as comCoordinates
 import com.hikit.cai2hikit.processor.DTWAlgorithm
 import com.hikit.cai2hikit.processor.TrailSimilarityAlgorithm
 import org.hikit.common.dto.*
@@ -26,7 +29,7 @@ import org.mockito.ArgumentMatchers.anyList
 // Test 3: match ±0.60 - match dati geografici perfetto, match dati calcolati completamente KO
 // Test 4: match ±0.40 - match dati geografici KO, perfect match dati calcolati completamente
 
-private val storedTrail0 = daoTrail(
+private val storedTrail0 = dtoTrail(
     Properties(
         "1",
         1,
@@ -40,7 +43,7 @@ private val storedTrail0 = daoTrail(
         Date(),
         Date(),
     ),
-    daoGeometry(
+    dtoGeometry(
         "",
         listOf(
             listOf(
@@ -146,7 +149,7 @@ class TrailSimilarityAlgorithmTest(
 
     @Test
     fun `should check two very different trails`() {
-        val storedTrail1 = Trail(
+        val storedTrail1 = dtoTrail(
             properties = Properties(
                 "1",
                 1,
@@ -160,7 +163,7 @@ class TrailSimilarityAlgorithmTest(
                 Date(),
                 Date(),
             ),
-            geometry = Geometry(
+            geometry = dtoGeometry(
                 type = "type",
                 coordinates = listOf(
                     listOf(
@@ -228,7 +231,7 @@ class TrailSimilarityAlgorithmTest(
 
     @Test
     fun `should check data match, geometry mismatch`() {
-        val storedTrail1 = Trail(
+        val storedTrail1 = dtoTrail(
             properties = Properties(
                 "1",
                 1,
@@ -242,7 +245,7 @@ class TrailSimilarityAlgorithmTest(
                 Date(),
                 Date(),
             ),
-            geometry = Geometry(
+            geometry = dtoGeometry(
                 type = "type",
                 coordinates = listOf(
                     listOf(
@@ -307,7 +310,7 @@ class TrailSimilarityAlgorithmTest(
 
     @Test
     fun `should check data mismatch, geometry match`() {
-        val storedTrail1 = Trail(
+        val storedTrail1 = dtoTrail(
             properties = Properties(
                 "1",
                 1,
@@ -321,7 +324,7 @@ class TrailSimilarityAlgorithmTest(
                 Date(),
                 Date(),
             ),
-            geometry = Geometry(
+            geometry = dtoGeometry(
                 type = "type",
                 coordinates = listOf(
                     listOf(

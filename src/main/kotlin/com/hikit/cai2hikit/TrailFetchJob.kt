@@ -42,14 +42,13 @@ class TrailFetchJob(
         trailToLastUpdate: IdToUpdateDate
     ) {
         val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail.properties.id)
-        println(fetchedTrail.geometry)
-        val trailForSaving = daoTrail(fetchedTrail.properties, daoGeometry("", fetchedTrail.geometry.coordinates))
+//        println(fetchedTrail.geometry)
         if (previouslySavedTrail == null) {
-            trailRepository.insert(trailForSaving)
+            trailRepository.insert(fetchedTrail)
         } else if (previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {
             logger.info("Trail with id ${trailToLastUpdate.id} updated by newly fetched $fetchedTrail")
             previouslySavedTrail.properties = fetchedTrail.properties
-            previouslySavedTrail.geometry = trailForSaving.geometry
+            previouslySavedTrail.geometry = fetchedTrail.geometry
             trailRepository.save(previouslySavedTrail)
         } else {
             logger.debug("Trail with id ${trailToLastUpdate.id} is already up to date")
