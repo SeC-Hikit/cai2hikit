@@ -29,7 +29,7 @@ import org.mockito.ArgumentMatchers.anyList
 // Test 3: match ±0.60 - match dati geografici perfetto, match dati calcolati completamente KO
 // Test 4: match ±0.40 - match dati geografici KO, perfect match dati calcolati completamente
 
-private val storedTrail0 = dtoTrail(
+private val storedTrail0 = daoTrail(
     Properties(
         "1",
         1,
@@ -43,24 +43,26 @@ private val storedTrail0 = dtoTrail(
         Date(),
         Date(),
     ),
-    dtoGeometry(
+    daoGeometry(
         "",
         listOf(
             listOf(
-                43.9653826,
-                11.5473039
-            ),
-            listOf(
-                43.9657346,
-                11.5478117
+                listOf(
+                    43.9653826,
+                    11.5473039
                 ),
-            listOf(
-                43.9659758,
-                11.5481934
-                ),
-            listOf(
-                43.9661336,
-                11.5484466
+                listOf(
+                    43.9657346,
+                    11.5478117
+                    ),
+                listOf(
+                    43.9659758,
+                    11.5481934
+                    ),
+                listOf(
+                    43.9661336,
+                    11.5484466
+                )
             )
         )
     )

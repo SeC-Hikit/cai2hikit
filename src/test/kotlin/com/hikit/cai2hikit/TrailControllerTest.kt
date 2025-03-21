@@ -1,7 +1,7 @@
 package com.hikit.cai2hikit
 
-import org.hikit.common.dto.Geometry as dtoGeometry
-import org.hikit.common.dto.Trail as dtoTrail
+import com.hikit.cai2hikit.dao.Trail as daoTrail
+import com.hikit.cai2hikit.dao.Geometry as daoGeometry
 import org.hikit.common.dto.Properties
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -19,7 +19,7 @@ class TrailControllerTest(
     @Test
     fun `should get trail by id`() {
         val expectedId = "123"
-        val storedTrail = dtoTrail(
+        val storedTrail = daoTrail(
             properties = Properties(
                 expectedId,
                 123,
@@ -33,7 +33,7 @@ class TrailControllerTest(
                 Date(),
                 Date(),
             ),
-            geometry = dtoGeometry(
+            geometry = daoGeometry(
                 type = "type",
                 coordinates = listOf()
             )
@@ -53,7 +53,7 @@ class TrailControllerTest(
     fun `should get trail by ref`() {
         val expectedRef = "101"
         val storedTrailList = listOf(
-            dtoTrail(
+            daoTrail(
                 properties = Properties(
                     "123",
                     123,
@@ -67,7 +67,7 @@ class TrailControllerTest(
                     Date(),
                     Date()
                 ),
-                geometry = dtoGeometry(
+                geometry = daoGeometry(
                     type = "type",
                     coordinates = listOf()
                 )

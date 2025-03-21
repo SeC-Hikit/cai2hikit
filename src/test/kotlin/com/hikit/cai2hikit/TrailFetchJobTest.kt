@@ -4,8 +4,6 @@ import com.hikit.cai2hikit.dao.GeometryMapper
 import org.hikit.common.dto.IdToUpdateDate
 import com.hikit.cai2hikit.dao.Trail as daoTrail
 import com.hikit.cai2hikit.dao.Geometry as daoGeometry
-import org.hikit.common.dto.Trail as dtoTrail
-import org.hikit.common.dto.Geometry as dtoGeometry
 import org.hikit.common.dto.Properties
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -30,7 +28,7 @@ class TrailFetchJobTest(
         val expectedId = "30319"
         `when`(mockedTrailClient.fetchTrail(expectedId))
             .thenReturn(
-                dtoTrail(
+                daoTrail(
                     properties = Properties(
                         expectedId,
                         123,
@@ -44,7 +42,7 @@ class TrailFetchJobTest(
                         Date(),
                         Date(),
                     ),
-                    geometry = dtoGeometry(
+                    geometry = daoGeometry(
                         type = "type",
                         coordinates = listOf()
                     )
@@ -73,7 +71,7 @@ class TrailFetchJobTest(
         val expectedId = "30319"
         `when`(mockedTrailClient.fetchTrail(expectedId))
             .thenReturn(
-                dtoTrail(
+                daoTrail(
                     properties = Properties(
                         expectedId,
                         123,
@@ -87,7 +85,7 @@ class TrailFetchJobTest(
                         Date(),
                         Date(),
                     ),
-                    geometry = dtoGeometry(
+                    geometry = daoGeometry(
                         type = "type",
                         coordinates = listOf()
                     )
@@ -118,7 +116,7 @@ class TrailFetchJobTest(
         // given
         val expectedId = "30319"
         val someSavedDate = LocalDate.of(2015, 2, 20)
-        val savedTrail = dtoTrail(
+        val savedTrail = daoTrail(
             properties = Properties(
                 expectedId,
                 123,
@@ -132,21 +130,21 @@ class TrailFetchJobTest(
                 Date(),
                 getDate(someSavedDate)
             ),
-            geometry = dtoGeometry(
+            geometry = daoGeometry(
                 type = "type",
                 coordinates = listOf()
             )
         )
 
         val someMoreRecentDate = LocalDate.of(2024, 2, 20)
-        val fetchedTrail = dtoTrail(
+        val fetchedTrail = daoTrail(
             properties = Properties(
                 expectedId,
                 123, "updatedSource123", "EEA",
                 "Monzuno", "Marzabotto", "123", "",
                 123, Date(), getDate(someMoreRecentDate),
             ),
-            geometry = dtoGeometry(
+            geometry = daoGeometry(
                 type = "type",
                 coordinates = listOf(
                     listOf()
@@ -170,7 +168,7 @@ class TrailFetchJobTest(
         // then
         verify(mockedTrailClient, times(1)).fetchTrail(expectedId)
         verify(mockedTrailRepository, times(1)).save(argThat {
-            trail: dtoTrail -> trail.geometry.coordinates.size == 1 &&
+            trail: daoTrail -> trail.geometry.coordinates.size == 1 &&
                 trail.properties.updatedAt == fetchedTrail.properties.updatedAt
         })
     }

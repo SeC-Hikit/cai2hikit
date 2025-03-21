@@ -1,6 +1,6 @@
 package com.hikit.cai2hikit
 
-import org.hikit.common.dto.Trail
+import com.hikit.cai2hikit.dao.Trail
 import com.hikit.cai2hikit.exception.NotFoundException
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

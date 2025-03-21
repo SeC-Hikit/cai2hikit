@@ -32,17 +32,17 @@ class TrailFetchJob(
                 logger.warn("Could fetch trail with id ${trailToLastUpdate.id}, but Ref Id has been found 'null'. Skip saving")
                 continue
             }
-            upsertMoreRecentData(fetchedTrail, trailToLastUpdate)
+            upsertMoreRecentData(
+                fetchedTrail, trailToLastUpdate)
             Thread.sleep(200)
         }
     }
 
     private fun upsertMoreRecentData(
-        fetchedTrail: dtoTrail,
+        fetchedTrail: daoTrail,
         trailToLastUpdate: IdToUpdateDate
     ) {
         val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail.properties.id)
-//        println(fetchedTrail.geometry)
         if (previouslySavedTrail == null) {
             trailRepository.insert(fetchedTrail)
         } else if (previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {
