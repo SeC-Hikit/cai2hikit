@@ -45,7 +45,7 @@ class TrailSimilarityAlgorithm @Autowired constructor(
             TrailToScore(it, finalScore.toInt())
         }
 
-        return trailToScores.sortedBy { it.accuracy }.subList(0, 10)
+        return trailToScores.sortedBy { it.accuracy }
     }
 
     fun computeMetaScores(requestData: MatchingRequest, trailIn: List<Coordinates>): Double {

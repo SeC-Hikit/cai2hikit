@@ -46,7 +46,6 @@ private val storedTrail0 = daoTrail(
     daoGeometry(
         "",
         listOf(
-            listOf(
                 listOf(
                     43.9653826,
                     11.5473039
@@ -64,7 +63,6 @@ private val storedTrail0 = daoTrail(
                     11.5484466
                 )
             )
-        )
     )
 )
 

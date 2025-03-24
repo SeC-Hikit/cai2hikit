@@ -1,14 +1,12 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.dao.Geometry as daoGeometry
 import com.hikit.cai2hikit.dao.GeometryMapper
 import org.hikit.common.dto.IdToUpdateDate
-import org.hikit.common.dto.Trail as dtoTrail
-import com.hikit.cai2hikit.dao.Trail as daoTrail
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import org.hikit.common.dto.Trail as dtoTrail
 
 
 @Service
@@ -32,23 +30,23 @@ class TrailFetchJob(
                 logger.warn("Could fetch trail with id ${trailToLastUpdate.id}, but Ref Id has been found 'null'. Skip saving")
                 continue
             }
-            upsertMoreRecentData(
-                fetchedTrail, trailToLastUpdate)
+            upsertMoreRecentData(fetchedTrail, trailToLastUpdate)
             Thread.sleep(200)
         }
     }
 
     private fun upsertMoreRecentData(
-        fetchedTrail: daoTrail,
+        fetchedTrail: dtoTrail,
         trailToLastUpdate: IdToUpdateDate
     ) {
         val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail.properties.id)
+        val trailForSaving = com.hikit.cai2hikit.dao.Trail(fetchedTrail.properties, geometryMapper.mapToData(fetchedTrail.geometry))
         if (previouslySavedTrail == null) {
-            trailRepository.insert(fetchedTrail)
+            trailRepository.insert(trailForSaving)
         } else if (previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {
             logger.info("Trail with id ${trailToLastUpdate.id} updated by newly fetched $fetchedTrail")
             previouslySavedTrail.properties = fetchedTrail.properties
-            previouslySavedTrail.geometry = fetchedTrail.geometry
+            previouslySavedTrail.geometry = trailForSaving.geometry
             trailRepository.save(previouslySavedTrail)
         } else {
             logger.debug("Trail with id ${trailToLastUpdate.id} is already up to date")

@@ -1,7 +1,7 @@
 package com.hikit.cai2hikit
 
 import org.hikit.common.dto.IdToUpdateDate
-import com.hikit.cai2hikit.dao.Trail
+import org.hikit.common.dto.Trail
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -53,9 +53,6 @@ class TrailRestClient(
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(Trail::class.java)
-            if (serializedResponse != null) {
-                println(serializedResponse.properties)
-            }
             logger.info("Done fetching full trail with Id '$id' from remote")
             return serializedResponse
         } catch (ex: RestClientException) {
