@@ -1,11 +1,11 @@
 package com.hikit.cai2hikit
 
 import com.hikit.cai2hikit.conf.trailCollection
+import com.hikit.cai2hikit.dao.Trail
 import com.mongodb.client.MongoCollection
 import org.bson.Document
 import org.hikit.common.datasource.Datasource
 import org.hikit.common.datasource.MongoUtils.*
-import org.hikit.common.dto.Trail
 import org.hikit.common.geo.CoordinatesRectangle
 import org.hikit.common.processor.Coordinates
 import org.springframework.beans.factory.annotation.Autowired

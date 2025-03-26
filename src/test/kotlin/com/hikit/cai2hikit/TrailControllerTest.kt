@@ -1,7 +1,7 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.dao.Trail as daoTrail
-import com.hikit.cai2hikit.dao.Geometry as daoGeometry
+import com.hikit.cai2hikit.remote.OsmTrail as daoTrail
+import com.hikit.cai2hikit.remote.OsmGeometry as daoGeometry
 import org.hikit.common.dto.Properties
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,7 +33,7 @@ class TrailControllerTest(
                 Date(),
                 Date(),
             ),
-            geometry = daoGeometry(
+            osmGeometry = daoGeometry(
                 type = "type",
                 coordinates = listOf()
             )
@@ -67,7 +67,7 @@ class TrailControllerTest(
                     Date(),
                     Date()
                 ),
-                geometry = daoGeometry(
+                osmGeometry = daoGeometry(
                     type = "type",
                     coordinates = listOf()
                 )

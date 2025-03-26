@@ -1,7 +1,7 @@
 package com.hikit.cai2hikit
 
 import com.hikit.cai2hikit.adapter.AltitudeServiceWrapper
-import com.hikit.cai2hikit.dao.GeometryMapper
+import com.hikit.cai2hikit.remote.FetchedTrailMapper
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -9,12 +9,11 @@ import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
-import com.hikit.cai2hikit.dao.Trail as daoTrail
-import com.hikit.cai2hikit.dao.Geometry as daoGeometry
+import com.hikit.cai2hikit.remote.OsmTrail as daoTrail
+import com.hikit.cai2hikit.remote.OsmGeometry as daoGeometry
 import com.hikit.cai2hikit.processor.Coordinates
 import org.hikit.common.dto.Trail as dtoTrail
 import org.hikit.common.dto.Geometry as dtoGeometry
-import org.hikit.common.processor.Coordinates as comCoordinates
 import com.hikit.cai2hikit.processor.DTWAlgorithm
 import com.hikit.cai2hikit.processor.TrailSimilarityAlgorithm
 import org.hikit.common.dto.*
@@ -140,7 +139,7 @@ class TrailSimilarityAlgorithmTest(
             mockedAltitudeAdapter,
             TrailsStatsCalculator(),
             mockedGeoTrailRepository,
-            GeometryMapper()
+            FetchedTrailMapper()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
@@ -222,7 +221,7 @@ class TrailSimilarityAlgorithmTest(
             mockedAltitudeAdapter,
             TrailsStatsCalculator(),
             mockedGeoTrailRepository,
-            GeometryMapper()
+            FetchedTrailMapper()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
@@ -301,7 +300,7 @@ class TrailSimilarityAlgorithmTest(
             mockedAltitudeAdapter,
             TrailsStatsCalculator(),
             mockedGeoTrailRepository,
-            GeometryMapper()
+            FetchedTrailMapper()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)
@@ -381,7 +380,7 @@ class TrailSimilarityAlgorithmTest(
             mockedAltitudeAdapter,
             TrailsStatsCalculator(),
             mockedGeoTrailRepository,
-            GeometryMapper()
+            FetchedTrailMapper()
         )
 
         val result = trailSimilarityAlgorithmUnderTest.run(requestData)

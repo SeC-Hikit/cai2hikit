@@ -1,7 +1,7 @@
 package com.hikit.cai2hikit
 
+import com.hikit.cai2hikit.remote.OsmTrail
 import org.hikit.common.dto.IdToUpdateDate
-import org.hikit.common.dto.Trail
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -44,7 +44,7 @@ class TrailRestClient(
         return idToLastUpdatedDate
     }
 
-    fun fetchTrail(id: String): Trail? {
+    fun fetchTrail(id: String): OsmTrail? {
         logger.info("Going to fetch full trail with Id '$id' from remote")
         val trailUri = "hiking-route/${id}"
         try {
@@ -52,7 +52,7 @@ class TrailRestClient(
                 .uri(trailUri)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .body(Trail::class.java)
+                .body(OsmTrail::class.java)
             logger.info("Done fetching full trail with Id '$id' from remote")
             return serializedResponse
         } catch (ex: RestClientException) {

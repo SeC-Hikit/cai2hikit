@@ -16,11 +16,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class MongoDatasource : Datasource {
 
-    private val LOGGER = LogManager.getLogger(
-        MongoDatasource::class.java
-    )
-
     private lateinit var mongoClient: MongoClient
+
     @Value("\${spring.data.mongodb.database}")
     private lateinit var databaseName: String
 

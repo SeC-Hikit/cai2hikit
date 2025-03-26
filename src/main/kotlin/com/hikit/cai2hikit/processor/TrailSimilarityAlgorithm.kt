@@ -2,7 +2,7 @@ package com.hikit.cai2hikit.processor
 
 import com.hikit.cai2hikit.GeoTrailRepository
 import com.hikit.cai2hikit.adapter.AltitudeServiceWrapper
-import com.hikit.cai2hikit.dao.GeometryMapper
+import com.hikit.cai2hikit.remote.FetchedTrailMapper
 import org.hikit.common.dto.MatchingRequest
 import org.hikit.common.dto.TrailToScore
 import org.hikit.common.geo.CoordinatesRectangle
@@ -16,7 +16,6 @@ import kotlin.math.pow
 
 private const val matchingScoreWeight = 0.6
 private const val metaScoreWeight = 0.4
-
 private const val metaScoresNumber = 5.0
 
 @Component
@@ -25,7 +24,7 @@ class TrailSimilarityAlgorithm @Autowired constructor(
     private val altitudeServiceAdapter: AltitudeServiceWrapper,
     private val trailStatsCalculator: TrailsStatsCalculator,
     private val geoTrailRepository: GeoTrailRepository,
-    private val geometryMapper: GeometryMapper
+    private val fetchedTrailMapper: FetchedTrailMapper
 ) {
     fun run(requestData: MatchingRequest): List<TrailToScore> {
 
@@ -36,11 +35,13 @@ class TrailSimilarityAlgorithm @Autowired constructor(
 
         val trailToScores = foundByIntersecting.map {
             val requestedTrailCoords: List<Coordinates> =
-                altitudeServiceAdapter.mapCoordsWithElevations(geometryMapper.dtoToCoords2D(it.geometry))
+                altitudeServiceAdapter.mapCoordsWithElevations(fetchedTrailMapper.dtoToCoords2D(it.geometry))
             val trailScore = dtwAlgorithm.run(requestedTrailCoords, requestedTrailCoords)
 
             val metaScoresAggregate = computeMetaScores(requestData, requestedTrailCoords)
             val finalScore = (matchingScoreWeight * trailScore + metaScoreWeight * metaScoresAggregate)
+
+
 
             TrailToScore(it, finalScore.toInt())
         }
