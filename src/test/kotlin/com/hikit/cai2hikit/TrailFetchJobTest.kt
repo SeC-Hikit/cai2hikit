@@ -1,10 +1,13 @@
 package com.hikit.cai2hikit
 
+import com.hikit.cai2hikit.dao.Geometry
+import com.hikit.cai2hikit.dao.Properties
+import com.hikit.cai2hikit.dao.Trail
 import com.hikit.cai2hikit.remote.FetchedTrailMapper
-import org.hikit.common.dto.Geometry
+import com.hikit.cai2hikit.remote.OsmGeometry
+import com.hikit.cai2hikit.remote.OsmProperties
+import com.hikit.cai2hikit.remote.OsmTrail
 import org.hikit.common.dto.IdToUpdateDate
-import org.hikit.common.dto.Properties
-import org.hikit.common.dto.Trail
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -14,8 +17,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
-import com.hikit.cai2hikit.remote.OsmGeometry as daoGeometry
-import com.hikit.cai2hikit.remote.OsmTrail as daoTrail
 
 
 @ExtendWith(MockitoExtension::class)
@@ -28,8 +29,8 @@ class TrailFetchJobTest(
     fun `should test retrieving one trail member calls`() {
         // given
         val expectedId = "30319"
-        val trail = Trail(
-            properties = Properties(
+        val trail = OsmTrail(
+            properties = OsmProperties(
                 expectedId,
                 123,
                 "",
@@ -42,7 +43,7 @@ class TrailFetchJobTest(
                 Date(),
                 Date(),
             ),
-            geometry = Geometry(
+            osmGeometry = OsmGeometry(
                 type = "type",
                 coordinates = listOf()
             )
@@ -52,7 +53,7 @@ class TrailFetchJobTest(
                 trail
             )
 
-        `when`(mockedFetchedTrailMapper.mapToData(trail.geometry)).thenReturn(mock(daoGeometry::class.java))
+        `when`(mockedFetchedTrailMapper.mapToEntity(trail)).thenReturn(mock(Trail::class.java))
         `when`(mockedTrailClient.fetchTrailIdsWithinBoundBox())
             .thenReturn(listOf(IdToUpdateDate(expectedId, LocalDateTime.now())))
         val systemUnderTest = TrailFetchJob(
@@ -74,8 +75,8 @@ class TrailFetchJobTest(
         val expectedId = "30319"
         `when`(mockedTrailClient.fetchTrail(expectedId))
             .thenReturn(
-                Trail(
-                    properties = Properties(
+                OsmTrail(
+                    properties = OsmProperties(
                         expectedId,
                         123,
                         "",
@@ -88,7 +89,7 @@ class TrailFetchJobTest(
                         Date(),
                         Date(),
                     ),
-                    geometry = Geometry(
+                    osmGeometry = OsmGeometry(
                         type = "type",
                         coordinates = listOf()
                     )
@@ -119,7 +120,7 @@ class TrailFetchJobTest(
         // given
         val expectedId = "30319"
         val someSavedDate = LocalDate.of(2015, 2, 20)
-        val savedTrail = daoTrail(
+        val savedTrail = Trail(
             properties = Properties(
                 expectedId,
                 123,
@@ -133,21 +134,22 @@ class TrailFetchJobTest(
                 Date(),
                 getDate(someSavedDate)
             ),
-            osmGeometry = daoGeometry(
+            geometry = Geometry(
                 type = "type",
-                coordinates = listOf()
+                coordinates = listOf(listOf(2.2, 3.3))
             )
         )
 
         val someMoreRecentDate = LocalDate.of(2024, 2, 20)
-        val fetchedTrail = Trail(
-            properties = Properties(
+        val updatedDate = getDate(someMoreRecentDate)
+        val fetchedTrail = OsmTrail(
+            properties = OsmProperties(
                 expectedId,
                 123, "updatedSource123", "EEA",
                 "Monzuno", "Marzabotto", "123", "",
-                123, Date(), getDate(someMoreRecentDate),
+                123, Date(), updatedDate,
             ),
-            geometry = Geometry(
+            osmGeometry = OsmGeometry(
                 type = "type",
                 coordinates = listOf(
                     listOf(
@@ -156,8 +158,24 @@ class TrailFetchJobTest(
                 )
             )
         )
-        doReturn(daoGeometry("LineString", listOf(listOf(2.2, 3.3)))).`when`(mockedFetchedTrailMapper)
-            .mapToData(fetchedTrail.geometry)
+        val trailForSaving = Trail(
+            properties = Properties(
+                expectedId,
+                123, "updatedSource123", "EEA",
+                "Monzuno", "Marzabotto", "123", "",
+                123, Date(), updatedDate,
+            ),
+            geometry = Geometry(
+                type = "type",
+                coordinates =
+                listOf(
+                    listOf(2.2, 3.3)
+                )
+            )
+        )
+
+        doReturn(trailForSaving).`when`(mockedFetchedTrailMapper)
+            .mapToEntity(fetchedTrail)
         doReturn(fetchedTrail).`when`(mockedTrailClient).fetchTrail(expectedId)
         doReturn(savedTrail).`when`(mockedTrailRepository).findByPropsId(expectedId)
         doReturn(listOf(IdToUpdateDate(expectedId, LocalDateTime.now()))).`when`(mockedTrailClient)
@@ -174,8 +192,8 @@ class TrailFetchJobTest(
 
         // then
         verify(mockedTrailClient, times(1)).fetchTrail(expectedId)
-        verify(mockedTrailRepository, times(1)).save(argThat { trail: daoTrail ->
-            trail.osmGeometry.coordinates.size == 1 &&
+        verify(mockedTrailRepository, times(1)).save(argThat { trail: Trail ->
+            trail.geometry.coordinates.size == 1 &&
                     trail.properties.updatedAt == fetchedTrail.properties.updatedAt
         })
     }

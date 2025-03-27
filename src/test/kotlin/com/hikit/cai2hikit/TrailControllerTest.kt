@@ -4,6 +4,7 @@ import com.hikit.cai2hikit.dao.DaoTrailMapper
 import com.hikit.cai2hikit.dao.Geometry
 import com.hikit.cai2hikit.dao.Properties
 import com.hikit.cai2hikit.dao.Trail
+import com.hikit.cai2hikit.processor.TrailSimilarityProcessor
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,7 +18,8 @@ import kotlin.test.assertEquals
 @ExtendWith(MockitoExtension::class)
 class TrailControllerTest(
     @Mock val trailRepositoryMock: TrailRepository,
-    @Mock val daoTrailMapperMock: DaoTrailMapper
+    @Mock val daoTrailMapperMock: DaoTrailMapper,
+    @Mock val similarityProcessor: TrailSimilarityProcessor,
 ) {
     @Test
     fun `should get trail by id`() {
@@ -49,7 +51,7 @@ class TrailControllerTest(
 
 
         // WHEN
-        val controllerUnderTest = TrailController(trailRepositoryMock, daoTrailMapperMock)
+        val controllerUnderTest = TrailController(trailRepositoryMock, daoTrailMapperMock, similarityProcessor)
         val returnedTrail = controllerUnderTest.getTrail(expectedId)
 
         // THEN
@@ -90,8 +92,7 @@ class TrailControllerTest(
 
 
         // WHEN
-
-        val controllerUnderTest = TrailController(trailRepositoryMock, daoTrailMapperMock)
+        val controllerUnderTest = TrailController(trailRepositoryMock, daoTrailMapperMock, similarityProcessor)
         val returnedTrail = controllerUnderTest.getTrailByRef(expectedRef)
 
         // THEN
@@ -100,4 +101,6 @@ class TrailControllerTest(
         assertThat(returnedTrail).contains(mappedTrailMock)
         assertThat(returnedTrail).hasSize(1)
     }
+
+    // TODO: add new test to ensure matchTrail
 }
