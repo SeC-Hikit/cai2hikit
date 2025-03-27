@@ -2,5 +2,5 @@ package com.hikit.cai2hikit.remote
 
 class OsmTrail (
     var properties: OsmProperties,
-    var osmGeometry: OsmGeometry
+    var geometry: OsmGeometry
 )

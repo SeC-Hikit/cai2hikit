@@ -56,7 +56,7 @@ class TrailRestClient(
             logger.info("Done fetching full trail with Id '$id' from remote")
             return serializedResponse
         } catch (ex: RestClientException) {
-            logger.info("Error with fetching trail with $id' from remote, cause: ${ex.message}" )
+            logger.info("Error with fetching trail with '$id' from remote, cause: ${ex.message}" )
             return null
         }
     }

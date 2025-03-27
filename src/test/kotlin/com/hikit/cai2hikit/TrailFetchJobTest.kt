@@ -43,7 +43,7 @@ class TrailFetchJobTest(
                 Date(),
                 Date(),
             ),
-            osmGeometry = OsmGeometry(
+            geometry = OsmGeometry(
                 type = "type",
                 coordinates = listOf()
             )
@@ -89,7 +89,7 @@ class TrailFetchJobTest(
                         Date(),
                         Date(),
                     ),
-                    osmGeometry = OsmGeometry(
+                    geometry = OsmGeometry(
                         type = "type",
                         coordinates = listOf()
                     )
@@ -149,7 +149,7 @@ class TrailFetchJobTest(
                 "Monzuno", "Marzabotto", "123", "",
                 123, Date(), updatedDate,
             ),
-            osmGeometry = OsmGeometry(
+            geometry = OsmGeometry(
                 type = "type",
                 coordinates = listOf(
                     listOf(

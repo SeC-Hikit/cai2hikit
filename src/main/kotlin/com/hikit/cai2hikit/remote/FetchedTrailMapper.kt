@@ -29,7 +29,7 @@ class FetchedTrailMapper {
                 toMap.properties.validationDate,
                 toMap.properties.updatedAt,
             ),
-            Geometry("LineString", toMap.osmGeometry.coordinates.first())
+            Geometry("LineString", toMap.geometry.coordinates.first())
         )
     }
 
