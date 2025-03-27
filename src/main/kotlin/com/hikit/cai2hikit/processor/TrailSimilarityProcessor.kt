@@ -2,9 +2,9 @@ package com.hikit.cai2hikit.processor
 
 import com.hikit.cai2hikit.GeoTrailRepository
 import com.hikit.cai2hikit.adapter.AltitudeServiceWrapper
+import com.hikit.cai2hikit.dao.Trail
 import com.hikit.cai2hikit.remote.FetchedTrailMapper
 import org.hikit.common.dto.MatchingRequest
-import org.hikit.common.dto.TrailToScore
 import org.hikit.common.geo.CoordinatesRectangle
 import org.hikit.common.processor.Coordinates
 import org.hikit.common.processor.TrailsStatsCalculator
@@ -19,34 +19,29 @@ private const val metaScoreWeight = 0.4
 private const val metaScoresNumber = 5.0
 
 @Component
-class TrailSimilarityAlgorithm @Autowired constructor(
+class TrailSimilarityProcessor @Autowired constructor(
     private val dtwAlgorithm: DTWAlgorithm,
     private val altitudeServiceAdapter: AltitudeServiceWrapper,
     private val trailStatsCalculator: TrailsStatsCalculator,
     private val geoTrailRepository: GeoTrailRepository,
-    private val fetchedTrailMapper: FetchedTrailMapper
+    private val fetchedTrailMapper: FetchedTrailMapper,
 ) {
-    fun run(requestData: MatchingRequest): List<TrailToScore> {
+    fun run(requestData: MatchingRequest): List<Pair<Trail, Int>> {
 
         // 1st: take the edge coordinates and geo filter -> intersects: listOf(Trail)
         val foundByIntersecting = geoTrailRepository.findByIntersection(
             getOuterSquareForCoordinates(requestData.coordinates)
         )
 
-        val trailToScores = foundByIntersecting.map {
+        return foundByIntersecting.map {
             val requestedTrailCoords: List<Coordinates> =
                 altitudeServiceAdapter.mapCoordsWithElevations(fetchedTrailMapper.dtoToCoords2D(it.geometry))
             val trailScore = dtwAlgorithm.run(requestedTrailCoords, requestedTrailCoords)
 
             val metaScoresAggregate = computeMetaScores(requestData, requestedTrailCoords)
             val finalScore = (matchingScoreWeight * trailScore + metaScoreWeight * metaScoresAggregate)
-
-
-
-            TrailToScore(it, finalScore.toInt())
-        }
-
-        return trailToScores.sortedBy { it.accuracy }
+            Pair(it, finalScore.toInt())
+        }.sortedBy { it.second }
     }
 
     fun computeMetaScores(requestData: MatchingRequest, trailIn: List<Coordinates>): Double {

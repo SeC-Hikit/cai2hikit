@@ -15,7 +15,7 @@ import com.hikit.cai2hikit.processor.Coordinates
 import org.hikit.common.dto.Trail as dtoTrail
 import org.hikit.common.dto.Geometry as dtoGeometry
 import com.hikit.cai2hikit.processor.DTWAlgorithm
-import com.hikit.cai2hikit.processor.TrailSimilarityAlgorithm
+import com.hikit.cai2hikit.processor.TrailSimilarityProcessor
 import org.hikit.common.dto.*
 import org.hikit.common.dto.Properties
 import org.hikit.common.processor.TrailsStatsCalculator
@@ -119,7 +119,7 @@ val requestData = MatchingRequest(
 )
 
 @ExtendWith(MockitoExtension::class)
-class TrailSimilarityAlgorithmTest(
+class TrailSimilarityProcessorTest(
     @Mock val mockedTrailRepository: TrailRepository,
     @Mock val mockedAltitudeAdapter: AltitudeServiceWrapper,
     @Mock val mockedGeoTrailRepository: GeoTrailRepository
@@ -134,7 +134,7 @@ class TrailSimilarityAlgorithmTest(
 
         val dtwUnderTest = DTWAlgorithm()
 
-        val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
+        val trailSimilarityProcessorUnderTest = TrailSimilarityProcessor(
             dtwUnderTest,
             mockedAltitudeAdapter,
             TrailsStatsCalculator(),
@@ -142,7 +142,7 @@ class TrailSimilarityAlgorithmTest(
             FetchedTrailMapper()
         )
 
-        val result = trailSimilarityAlgorithmUnderTest.run(requestData)
+        val result = trailSimilarityProcessorUnderTest.run(requestData)
         assertEquals(result[0].accuracy, 1.0)
     }
 
@@ -216,7 +216,7 @@ class TrailSimilarityAlgorithmTest(
 
         val dtwUnderTest = DTWAlgorithm()
 
-        val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
+        val trailSimilarityProcessorUnderTest = TrailSimilarityProcessor(
             dtwUnderTest,
             mockedAltitudeAdapter,
             TrailsStatsCalculator(),
@@ -224,8 +224,8 @@ class TrailSimilarityAlgorithmTest(
             FetchedTrailMapper()
         )
 
-        val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertTrue(result[0].accuracy < 0.1)
+        val result = trailSimilarityProcessorUnderTest.run(requestData)
+        assertTrue(result[0].second < 0.1)
     }
 
     @Test
@@ -295,7 +295,7 @@ class TrailSimilarityAlgorithmTest(
 
         val dtwUnderTest = DTWAlgorithm()
 
-        val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
+        val trailSimilarityProcessorUnderTest = TrailSimilarityProcessor(
             dtwUnderTest,
             mockedAltitudeAdapter,
             TrailsStatsCalculator(),
@@ -303,8 +303,8 @@ class TrailSimilarityAlgorithmTest(
             FetchedTrailMapper()
         )
 
-        val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertTrue(0.35 < result[0].accuracy && result[0].accuracy < 0.45)
+        val result = trailSimilarityProcessorUnderTest.run(requestData)
+        assertTrue(0.35 < result[0].second && result[0].second < 0.45)
     }
 
     @Test
@@ -375,7 +375,7 @@ class TrailSimilarityAlgorithmTest(
 
         val dtwUnderTest = DTWAlgorithm()
 
-        val trailSimilarityAlgorithmUnderTest = TrailSimilarityAlgorithm(
+        val trailSimilarityProcessorUnderTest = TrailSimilarityProcessor(
             dtwUnderTest,
             mockedAltitudeAdapter,
             TrailsStatsCalculator(),
@@ -383,7 +383,7 @@ class TrailSimilarityAlgorithmTest(
             FetchedTrailMapper()
         )
 
-        val result = trailSimilarityAlgorithmUnderTest.run(requestData)
-        assertTrue(0.55 < result[0].accuracy && result[0].accuracy < 0.65)
+        val result = trailSimilarityProcessorUnderTest.run(requestData)
+        assertTrue(0.55 < result[0].second && result[0].second < 0.65)
     }
 }

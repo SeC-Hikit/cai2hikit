@@ -1,8 +1,10 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.remote.OsmTrail as daoTrail
-import com.hikit.cai2hikit.remote.OsmGeometry as daoGeometry
-import org.hikit.common.dto.Properties
+import com.hikit.cai2hikit.dao.DaoTrailMapper
+import com.hikit.cai2hikit.dao.Geometry
+import com.hikit.cai2hikit.dao.Properties
+import com.hikit.cai2hikit.dao.Trail
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
@@ -14,12 +16,14 @@ import kotlin.test.assertEquals
 
 @ExtendWith(MockitoExtension::class)
 class TrailControllerTest(
-    @Mock val mockedTrailRepository: TrailRepository
+    @Mock val trailRepositoryMock: TrailRepository,
+    @Mock val daoTrailMapperMock: DaoTrailMapper
 ) {
     @Test
     fun `should get trail by id`() {
+        // GIVEN
         val expectedId = "123"
-        val storedTrail = daoTrail(
+        val storedTrail = Trail(
             properties = Properties(
                 expectedId,
                 123,
@@ -33,54 +37,67 @@ class TrailControllerTest(
                 Date(),
                 Date(),
             ),
-            osmGeometry = daoGeometry(
+            geometry = Geometry(
                 type = "type",
                 coordinates = listOf()
             )
         )
-        `when`(mockedTrailRepository.findByPropsId(expectedId))
+        val mappedTrailMock = mock<org.hikit.common.dto.Trail>()
+        `when`(trailRepositoryMock.findByPropsId(expectedId))
             .thenReturn(storedTrail)
+        `when`(daoTrailMapperMock.mapToDto(storedTrail)).thenReturn(mappedTrailMock)
 
-        val controllerUnderTest = TrailController(mockedTrailRepository)
 
+        // WHEN
+        val controllerUnderTest = TrailController(trailRepositoryMock, daoTrailMapperMock)
         val returnedTrail = controllerUnderTest.getTrail(expectedId)
 
-        verify(mockedTrailRepository, times(1)).findByPropsId(expectedId)
-        assertEquals(returnedTrail, storedTrail)
+        // THEN
+        verify(trailRepositoryMock, times(1)).findByPropsId(expectedId)
+        assertEquals(returnedTrail, mappedTrailMock)
     }
 
     @Test
     fun `should get trail by ref`() {
+        // GIVEN
         val expectedRef = "101"
-        val storedTrailList = listOf(
-            daoTrail(
-                properties = Properties(
-                    "123",
-                    123,
-                    "",
-                    "",
-                    "",
-                    "",
-                    expectedRef,
-                    "",
-                    4,
-                    Date(),
-                    Date()
-                ),
-                osmGeometry = daoGeometry(
-                    type = "type",
-                    coordinates = listOf()
-                )
+        val trail = Trail(
+            properties = Properties(
+                "123",
+                123,
+                "",
+                "",
+                "",
+                "",
+                expectedRef,
+                "",
+                4,
+                Date(),
+                Date()
+            ),
+            geometry = Geometry(
+                type = "type",
+                coordinates = listOf()
             )
         )
-        `when`(mockedTrailRepository.findByRef(expectedRef))
+        val storedTrailList = listOf(
+            trail
+        )
+        val mappedTrailMock = mock<org.hikit.common.dto.Trail>()
+        `when`(trailRepositoryMock.findByRef(expectedRef))
             .thenReturn(storedTrailList)
+        `when`(daoTrailMapperMock.mapToDto(trail)).thenReturn(mappedTrailMock)
 
-        val controllerUnderTest = TrailController(mockedTrailRepository)
 
+        // WHEN
+
+        val controllerUnderTest = TrailController(trailRepositoryMock, daoTrailMapperMock)
         val returnedTrail = controllerUnderTest.getTrailByRef(expectedRef)
 
-        verify(mockedTrailRepository, times(1)).findByRef(expectedRef)
-        assertEquals(returnedTrail, storedTrailList)
+        // THEN
+
+        verify(trailRepositoryMock, times(1)).findByRef(expectedRef)
+        assertThat(returnedTrail).contains(mappedTrailMock)
+        assertThat(returnedTrail).hasSize(1)
     }
 }
