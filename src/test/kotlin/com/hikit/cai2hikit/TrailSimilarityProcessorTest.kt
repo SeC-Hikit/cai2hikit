@@ -8,6 +8,7 @@ import com.hikit.cai2hikit.processor.TrailSimilarityProcessor
 import com.hikit.cai2hikit.remote.FetchedTrailMapper
 import org.hikit.common.dto.MatchingRequest
 import org.hikit.common.dto.StatsTrailMetadata
+import org.hikit.common.geo.CoordinatesRectangle
 import org.hikit.common.processor.TrailsStatsCalculator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -15,7 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyList
 import org.mockito.Mock
-import org.mockito.Mockito.any
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
@@ -117,6 +118,9 @@ val requestData = MatchingRequest(
     )
 )
 
+private fun <T> any(type: Class<T>): T = Mockito.any<T>(type)
+
+
 @ExtendWith(MockitoExtension::class)
 class TrailSimilarityProcessorTest(
     @Mock val mockedAltitudeAdapter: AltitudeServiceWrapper,
@@ -124,7 +128,7 @@ class TrailSimilarityProcessorTest(
 ) {
     @Test
     fun `should check two identical trails`() {
-        `when`(mockedGeoTrailRepository.findByIntersection(any()))
+        `when`(mockedGeoTrailRepository.findByIntersection(any(CoordinatesRectangle::class.java)))
             .thenReturn(listOf(storedTrail0))
 
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
@@ -146,6 +150,42 @@ class TrailSimilarityProcessorTest(
 
     @Test
     fun `should check two very different trails`() {
+        val storedTrail1 = daoTrail(
+            Properties(
+                "1",
+                1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                4,
+                Date(),
+                Date(),
+            ),
+            daoGeometry(
+                "",
+                listOf(
+                    listOf(
+                        42.9653826,
+                        12.5473039
+                    ),
+                    listOf(
+                        42.9657346,
+                        12.5478117
+                    ),
+                    listOf(
+                        42.9659758,
+                        12.5481934
+                    ),
+                    listOf(
+                        42.9661336,
+                        12.5484466
+                    )
+                )
+            )
+        )
 
         val storedTrailWithElevation1: List<Coordinates> = listOf(
             Coordinates(
@@ -170,6 +210,8 @@ class TrailSimilarityProcessorTest(
             )
         )
 
+        `when`(mockedGeoTrailRepository.findByIntersection(any(CoordinatesRectangle::class.java)))
+            .thenReturn(listOf(storedTrail1))
 
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
             .thenReturn(storedTrailWithElevation1)
@@ -190,6 +232,43 @@ class TrailSimilarityProcessorTest(
 
     @Test
     fun `should check data match, geometry mismatch`() {
+        val storedTrail1 = daoTrail(
+            Properties(
+                "1",
+                1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                4,
+                Date(),
+                Date(),
+            ),
+            daoGeometry(
+                "",
+                listOf(
+                    listOf(
+                        42.9653826,
+                        12.5473039
+                    ),
+                    listOf(
+                        42.9657346,
+                        12.5478117
+                    ),
+                    listOf(
+                        42.9659758,
+                        12.5481934
+                    ),
+                    listOf(
+                        42.9661336,
+                        12.5484466
+                    )
+                )
+            )
+        )
+
         val storedTrailWithElevation1: List<Coordinates> = listOf(
             Coordinates(
                 42.9653826,
@@ -213,6 +292,9 @@ class TrailSimilarityProcessorTest(
             )
         )
 
+        `when`(mockedGeoTrailRepository.findByIntersection(any(CoordinatesRectangle::class.java)))
+            .thenReturn(listOf(storedTrail1))
+
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
             .thenReturn(storedTrailWithElevation1)
 
@@ -232,6 +314,43 @@ class TrailSimilarityProcessorTest(
 
     @Test
     fun `should check data mismatch, geometry match`() {
+        val storedTrail1 = daoTrail(
+            Properties(
+                "1",
+                1,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                4,
+                Date(),
+                Date(),
+            ),
+            daoGeometry(
+                "",
+                listOf(
+                    listOf(
+                        43.9653826,
+                        11.5473039
+                    ),
+                    listOf(
+                        43.9657346,
+                        11.5478117
+                    ),
+                    listOf(
+                        43.9659758,
+                        11.5481934
+                    ),
+                    listOf(
+                        43.9661336,
+                        11.5484466
+                    )
+                )
+            )
+        )
+
         val storedTrailWithElevation1: List<Coordinates> = listOf(
             Coordinates(
                 43.9653826,
@@ -254,6 +373,9 @@ class TrailSimilarityProcessorTest(
                 1150.0
             )
         )
+
+        `when`(mockedGeoTrailRepository.findByIntersection(any(CoordinatesRectangle::class.java)))
+            .thenReturn(listOf(storedTrail1))
 
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
             .thenReturn(storedTrailWithElevation1)
