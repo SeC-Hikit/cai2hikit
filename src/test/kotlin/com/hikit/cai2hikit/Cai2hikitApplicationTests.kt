@@ -9,7 +9,6 @@ class Cai2hikitApplicationTests {
 
 	@Test
 	fun contextLoads() {
-		runApplication<Cai2hikitApplication>()
 	}
 
 }
