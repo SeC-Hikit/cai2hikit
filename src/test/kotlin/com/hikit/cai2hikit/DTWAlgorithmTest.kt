@@ -109,7 +109,6 @@ class DTWAlgorithmTest {
             storedTrail0,
             storedTrail1
         )
-        print(result)
         assertTrue(result in 0.45..0.55)
     }
 }
