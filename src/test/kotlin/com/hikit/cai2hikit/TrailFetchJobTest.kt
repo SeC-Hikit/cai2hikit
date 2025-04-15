@@ -1,8 +1,5 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.dao.Geometry
-import com.hikit.cai2hikit.dao.Properties
-import com.hikit.cai2hikit.dao.Trail
 import com.hikit.cai2hikit.remote.OsmGeometry
 import com.hikit.cai2hikit.remote.OsmProperties
 import com.hikit.cai2hikit.remote.OsmTrail
