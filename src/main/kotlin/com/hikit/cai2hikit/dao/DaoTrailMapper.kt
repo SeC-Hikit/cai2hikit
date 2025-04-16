@@ -23,8 +23,8 @@ class DaoTrailMapper {
                 updatedAt = properties.updatedAt
             ),
             geometry = org.hikit.common.dto.Geometry(
-                type = trail.geometry.type,
-                coordinates = trail.geometry.coordinates.map {
+                type = trail.geometry.type!!,
+                coordinates = trail.geometry.coordinates!!.map {
                     Coordinates2D(it[1], it[0])
                 }
             )

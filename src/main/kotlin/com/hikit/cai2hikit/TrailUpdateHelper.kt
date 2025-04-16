@@ -26,9 +26,9 @@ class TrailUpdateHelper(
         val previouslySavedTrail = trailRepository.findByPropsId(fetchedTrail.properties.id)
         val trailForSaving = fetchedTrailMapper.mapToEntity(fetchedTrail)
         if (previouslySavedTrail == null) {
-            logger.info("Saving newly detected trail ${trailForSaving.properties.id}")
+            logger.info("Saving newly detected trail ${trailForSaving.properties!!.id}")
             trailRepository.insert(trailForSaving)
-        } else if (previouslySavedTrail.properties.updatedAt < fetchedTrail.properties.updatedAt) {
+        } else if (previouslySavedTrail.properties!!.updatedAt < fetchedTrail.properties.updatedAt) {
             logger.info("Trail with id ${trailToLastUpdate.id} updated by newly fetched $fetchedTrail")
             trailRepository.delete(previouslySavedTrail)
             trailRepository.save(trailForSaving)

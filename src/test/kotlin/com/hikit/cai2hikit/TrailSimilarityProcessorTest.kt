@@ -29,6 +29,7 @@ import com.hikit.cai2hikit.dao.Trail as daoTrail
 // Test 4: match ±0.40 - match dati geografici KO, perfect match dati calcolati completamente
 
 private val storedTrail0 = daoTrail(
+    "",
     Properties(
         "1",
         1,
@@ -151,6 +152,7 @@ class TrailSimilarityProcessorTest(
     @Test
     fun `should check two very different trails`() {
         val storedTrail1 = daoTrail(
+            "",
             Properties(
                 "1",
                 1,
@@ -233,6 +235,7 @@ class TrailSimilarityProcessorTest(
     @Test
     fun `should check data match, geometry mismatch`() {
         val storedTrail1 = daoTrail(
+            "",
             Properties(
                 "1",
                 1,
@@ -315,6 +318,7 @@ class TrailSimilarityProcessorTest(
     @Test
     fun `should check data mismatch, geometry match`() {
         val storedTrail1 = daoTrail(
+            "",
             Properties(
                 "1",
                 1,

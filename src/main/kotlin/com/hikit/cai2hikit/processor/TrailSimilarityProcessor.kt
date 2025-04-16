@@ -4,6 +4,7 @@ import com.hikit.cai2hikit.GeoTrailRepository
 import com.hikit.cai2hikit.adapter.AltitudeServiceWrapper
 import com.hikit.cai2hikit.dao.Trail
 import com.hikit.cai2hikit.remote.FetchedTrailMapper
+import org.hikit.common.dto.CoordinatesDto
 import org.hikit.common.dto.MatchingRequest
 import org.hikit.common.geo.CoordinatesRectangle
 import org.hikit.common.processor.Coordinates
@@ -33,10 +34,14 @@ class TrailSimilarityProcessor @Autowired constructor(
             getOuterSquareForCoordinates(requestData.coordinates)
         )
 
+        val requestCoords = requestData.coordinates.map { Coordinates(
+            it.longitude,
+             it.latitude, it.altitude)}
+
         return foundByIntersecting.map {
             val requestedTrailCoords: List<Coordinates> =
                 altitudeServiceAdapter.mapCoordsWithElevations(fetchedTrailMapper.dtoToCoords2D(it.geometry))
-            val trailScore = dtwAlgorithm.run(requestData.coordinates, requestedTrailCoords)
+            val trailScore = dtwAlgorithm.run(requestCoords, requestedTrailCoords)
             val metaScoresAggregate = computeMetaScores(requestData, requestedTrailCoords)
             val finalScore = (matchingScoreWeight * trailScore + metaScoreWeight * metaScoresAggregate)
             Pair(it, finalScore)
@@ -59,7 +64,7 @@ class TrailSimilarityProcessor @Autowired constructor(
     }
 
     fun getOuterSquareForCoordinates(
-        coordinates2D: List<Coordinates>,
+        coordinates2D: List<CoordinatesDto>,
         paddingDistance: Double = 0.0
     ): CoordinatesRectangle {
         val topRight = Coordinates(coordinates2D.maxOf { it.longitude + paddingDistance },

@@ -26,6 +26,7 @@ class TrailControllerTest(
         // GIVEN
         val expectedId = "123"
         val storedTrail = Trail(
+            id = "",
             properties = Properties(
                 expectedId,
                 123,
@@ -64,6 +65,7 @@ class TrailControllerTest(
         // GIVEN
         val expectedRef = "101"
         val trail = Trail(
+            id = "",
             properties = Properties(
                 "123",
                 123,
