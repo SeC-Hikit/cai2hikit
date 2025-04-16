@@ -8,6 +8,7 @@ import org.hikit.common.dto.Trail
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -38,7 +39,7 @@ class TrailController(
     }
 
     @PostMapping("/match")
-    fun matchTrail(@PathVariable req: MatchingRequest): List<Trail>? {
+    fun matchTrail(@RequestBody req: MatchingRequest): List<Trail>? {
         val matchingTrail = trailSimilarityProcessor.run(req)
         if (matchingTrail.isEmpty()) {
             throw NotFoundException("Could not find any trail matching the request")

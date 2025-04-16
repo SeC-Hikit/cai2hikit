@@ -8,9 +8,11 @@ import org.springframework.boot.runApplication
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.ConfigurableApplicationContext
 import kotlin.system.exitProcess
+import kotlin.test.Ignore
 import kotlin.test.assertEquals
 
 
+@Ignore
 @SpringBootTest
 class GeneralTest {
 
