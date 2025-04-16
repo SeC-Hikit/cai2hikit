@@ -1,6 +1,6 @@
 package com.hikit.cai2hikit.dao
 
 data class Geometry(
-    val type: String? = "",
-    val coordinates: List<List<Double>>? = listOf()
+    var type: String? = "",
+    var coordinates: List<List<Double>>? = listOf()
 )

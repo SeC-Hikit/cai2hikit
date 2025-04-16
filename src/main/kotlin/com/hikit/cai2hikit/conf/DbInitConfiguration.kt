@@ -1,11 +1,8 @@
 package com.hikit.cai2hikit.conf
 
-import com.hikit.cai2hikit.RestClient
 import com.mongodb.client.model.Indexes
 import jakarta.annotation.PostConstruct
 import org.hikit.common.datasource.Datasource
-import org.hikit.common.dto.Trail
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 
 const val trailCollection = "trail"

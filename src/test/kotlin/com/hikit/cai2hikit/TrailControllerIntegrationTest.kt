@@ -4,6 +4,7 @@ import com.hikit.cai2hikit.remote.OsmGeometry
 import com.hikit.cai2hikit.remote.OsmProperties
 import com.hikit.cai2hikit.remote.OsmTrail
 import com.hikit.cai2hikit.processor.Coordinates
+import org.hikit.common.dto.CoordinatesDto
 import org.hikit.common.dto.IdToUpdateDate
 import org.hikit.common.dto.MatchingRequest
 import org.hikit.common.dto.StatsTrailMetadata
@@ -68,8 +69,8 @@ class TrailControllerIntegrationTest @Autowired constructor(
         val matchingRequest = MatchingRequest(
             "",
             listOf(
-                Coordinates(1.0, 1.0),
-                Coordinates(1.1, 1.1),
+                CoordinatesDto(1.0, 1.0),
+                CoordinatesDto(1.1, 1.1),
             ),
             StatsTrailMetadata(
                 0.0,
@@ -84,6 +85,6 @@ class TrailControllerIntegrationTest @Autowired constructor(
             storedTrail,
             IdToUpdateDate("123", LocalDateTime.now())
         )
-        assertEquals(trailController.matchTrail(matchingRequest)?.first()?.properties?.ref, "123")
+        assertEquals(trailController.matchTrail(matchingRequest)?.results?.first()?.trailData!!.properties.ref, "123")
     }
 }

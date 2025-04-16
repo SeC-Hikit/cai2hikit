@@ -2,6 +2,7 @@ package com.hikit.cai2hikit
 
 import com.hikit.cai2hikit.conf.trailCollection
 import com.hikit.cai2hikit.dao.Trail
+import com.hikit.cai2hikit.dao.TrailMapper
 import com.mongodb.client.MongoCollection
 import org.bson.Document
 import org.hikit.common.datasource.Datasource
@@ -12,9 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class GeoTrailRepository @Autowired constructor(dataSource: Datasource) {
+class GeoTrailRepository @Autowired constructor(
+    dataSource: Datasource,
+    private val trailMapper: TrailMapper
+) {
 
-    private val collection: MongoCollection<Trail> = dataSource.db.getCollection(trailCollection, Trail::class.java)
+    private val collection: MongoCollection<Document> = dataSource.db.getCollection(trailCollection, Document::class.java)
 
     fun findByIntersection(geoSquare: CoordinatesRectangle): List<Trail> {
         val polygonCoords = getCoords(geoSquare)
@@ -34,7 +38,7 @@ class GeoTrailRepository @Autowired constructor(dataSource: Datasource) {
                     )
                 )
             )
-        ).toList()
+        ).toList().map { trailMapper.map(it) }
     }
 
     private fun getCoords(geoSquare: CoordinatesRectangle): List<List<Double>> {

@@ -4,7 +4,9 @@ import com.hikit.cai2hikit.dao.DaoTrailMapper
 import com.hikit.cai2hikit.exception.NotFoundException
 import com.hikit.cai2hikit.processor.TrailSimilarityProcessor
 import org.hikit.common.dto.MatchingRequest
+import org.hikit.common.dto.MatchingResponse
 import org.hikit.common.dto.Trail
+import org.hikit.common.dto.TrailToScore
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -39,12 +41,12 @@ class TrailController(
     }
 
     @PostMapping("/match")
-    fun matchTrail(@RequestBody req: MatchingRequest): List<Trail>? {
+    fun matchTrail(@RequestBody req: MatchingRequest): MatchingResponse? {
         val matchingTrail = trailSimilarityProcessor.run(req)
         if (matchingTrail.isEmpty()) {
             throw NotFoundException("Could not find any trail matching the request")
         }
         val toTake = if (matchingTrail.size > 10) 10 else matchingTrail.size
-        return matchingTrail.map { trailMapper.mapToDto(it.first) }.take(toTake)
+        return MatchingResponse(matchingTrail.map { TrailToScore(trailData = trailMapper.mapToDto(it.first), accuracy = it.second.toInt())  }.take(toTake))
     }
 }

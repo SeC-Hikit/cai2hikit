@@ -6,6 +6,7 @@ import com.hikit.cai2hikit.processor.Coordinates
 import com.hikit.cai2hikit.processor.DTWAlgorithm
 import com.hikit.cai2hikit.processor.TrailSimilarityProcessor
 import com.hikit.cai2hikit.remote.FetchedTrailMapper
+import org.hikit.common.dto.CoordinatesDto
 import org.hikit.common.dto.MatchingRequest
 import org.hikit.common.dto.StatsTrailMetadata
 import org.hikit.common.geo.CoordinatesRectangle
@@ -29,21 +30,20 @@ import com.hikit.cai2hikit.dao.Trail as daoTrail
 // Test 4: match ±0.40 - match dati geografici KO, perfect match dati calcolati completamente
 
 private val storedTrail0 = daoTrail(
-    "",
-    Properties(
-        "1",
-        1,
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        4,
-        Date(),
-        Date(),
+    properties = Properties(
+        id = "1",
+        relationId = 1,
+        source = "",
+        caiScale = "",
+        from = "",
+        to = "",
+        ref = "",
+        publicPage = "",
+        sda = 4,
+        validationDate = Date(),
+        updatedAt = Date(),
     ),
-    daoGeometry(
+    geometry = daoGeometry(
         "",
         listOf(
                 listOf(
@@ -92,19 +92,19 @@ private val storedTrailWithElevation0: List<Coordinates> = listOf(
 val requestData = MatchingRequest(
     "0",
     listOf(
-        Coordinates(
+        CoordinatesDto(
             43.9653826,
             11.5473039
         ),
-        Coordinates(
+        CoordinatesDto(
             43.9657346,
             11.5478117
         ),
-        Coordinates(
+        CoordinatesDto(
             43.9659758,
             11.5481934
         ),
-        Coordinates(
+        CoordinatesDto(
             43.9661336,
             11.5484466
         )
@@ -152,8 +152,7 @@ class TrailSimilarityProcessorTest(
     @Test
     fun `should check two very different trails`() {
         val storedTrail1 = daoTrail(
-            "",
-            Properties(
+            properties = Properties(
                 "1",
                 1,
                 "",
@@ -166,7 +165,7 @@ class TrailSimilarityProcessorTest(
                 Date(),
                 Date(),
             ),
-            daoGeometry(
+            geometry = daoGeometry(
                 "",
                 listOf(
                     listOf(
@@ -235,8 +234,7 @@ class TrailSimilarityProcessorTest(
     @Test
     fun `should check data match, geometry mismatch`() {
         val storedTrail1 = daoTrail(
-            "",
-            Properties(
+            properties = Properties(
                 "1",
                 1,
                 "",
@@ -249,7 +247,7 @@ class TrailSimilarityProcessorTest(
                 Date(),
                 Date(),
             ),
-            daoGeometry(
+            geometry = daoGeometry(
                 "",
                 listOf(
                     listOf(
@@ -318,8 +316,7 @@ class TrailSimilarityProcessorTest(
     @Test
     fun `should check data mismatch, geometry match`() {
         val storedTrail1 = daoTrail(
-            "",
-            Properties(
+            properties = Properties(
                 "1",
                 1,
                 "",
@@ -332,7 +329,7 @@ class TrailSimilarityProcessorTest(
                 Date(),
                 Date(),
             ),
-            daoGeometry(
+            geometry = daoGeometry(
                 "",
                 listOf(
                     listOf(

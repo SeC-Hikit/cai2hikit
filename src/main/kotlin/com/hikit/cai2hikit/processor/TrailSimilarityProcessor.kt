@@ -34,9 +34,13 @@ class TrailSimilarityProcessor @Autowired constructor(
             getOuterSquareForCoordinates(requestData.coordinates)
         )
 
-        val requestCoords = requestData.coordinates.map { Coordinates(
-            it.longitude,
-             it.latitude, it.altitude)}
+        val requestCoords = requestData.coordinates.map {
+            Coordinates(
+                longitude = it.longitude,
+                latitude = it.latitude,
+                altitude = it.altitude
+            )
+        }
 
         return foundByIntersecting.map {
             val requestedTrailCoords: List<Coordinates> =
@@ -60,7 +64,7 @@ class TrailSimilarityProcessor @Autowired constructor(
         // calculate average
         val metaScoresAggregate = metaScores.sum() / metaScoresNumber
 
-        return(metaScoresAggregate)
+        return (metaScoresAggregate)
     }
 
     fun getOuterSquareForCoordinates(

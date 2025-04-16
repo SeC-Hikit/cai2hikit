@@ -4,7 +4,7 @@ import java.util.*
 
 data class Properties(
     var id: String = "",
-    val relationId: Int = 0,
+    var relationId: Int = 0,
     var source: String? = "",
     var caiScale: String = "",
     var from: String? = "",
