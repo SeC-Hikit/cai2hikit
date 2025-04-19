@@ -42,10 +42,15 @@ class TrailSimilarityProcessor @Autowired constructor(
             )
         }
 
+        for (i in requestCoords.indices) {
+            println(requestCoords[i])
+        }
+
         return foundByIntersecting.map {
             val requestedTrailCoords: List<Coordinates> =
                 altitudeServiceAdapter.mapCoordsWithElevations(fetchedTrailMapper.dtoToCoords2D(it.geometry))
             val trailScore = dtwAlgorithm.run(requestCoords, requestedTrailCoords)
+            println(trailScore)
             val metaScoresAggregate = computeMetaScores(requestData, requestedTrailCoords)
             val finalScore = (matchingScoreWeight * trailScore + metaScoreWeight * metaScoresAggregate)
             Pair(it, finalScore)
@@ -60,6 +65,8 @@ class TrailSimilarityProcessor @Autowired constructor(
             1.0 / max(1.0, ((requestData.metadata.highest - trailStatsCalculator.calculateHighestPlace(trailIn))).pow(2)),
             1.0 / max(1.0, ((requestData.metadata.lowest - trailStatsCalculator.calculateLowestPlace(trailIn))).pow(2))
         )
+
+        println("MetaScores: $metaScores")
 
         // calculate average
         val metaScoresAggregate = metaScores.sum() / metaScoresNumber
