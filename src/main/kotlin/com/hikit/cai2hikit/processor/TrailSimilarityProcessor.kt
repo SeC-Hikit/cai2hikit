@@ -11,6 +11,7 @@ import org.hikit.common.processor.Coordinates
 import org.hikit.common.processor.TrailsStatsCalculator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import kotlin.math.floor
 import kotlin.math.max
 import kotlin.math.pow
 
@@ -53,7 +54,7 @@ class TrailSimilarityProcessor @Autowired constructor(
             println(trailScore)
             val metaScoresAggregate = computeMetaScores(requestData, intersectedTrailCoord)
             val finalScore = (matchingScoreWeight * trailScore + metaScoreWeight * metaScoresAggregate)
-            Pair(it, finalScore)
+            Pair(it, floor(finalScore * 100) / 100f)
         }.sortedBy { it.second }
     }
 

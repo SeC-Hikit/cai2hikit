@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class FetchedTrailMapper {
     fun dtoToCoords2D(toMap: Geometry): List<Coordinates2D> {
         return toMap.coordinates!!.map {
-            Coordinates2D(it[0], it[1])
+            Coordinates2D(it[1], it[0])
         }
     }
 
