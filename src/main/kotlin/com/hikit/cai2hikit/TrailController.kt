@@ -47,6 +47,6 @@ class TrailController(
             throw NotFoundException("Could not find any trail matching the request")
         }
         val toTake = if (matchingTrail.size > 10) 10 else matchingTrail.size
-        return MatchingResponse(matchingTrail.map { TrailToScore(trailData = trailMapper.mapToDto(it.first), accuracy = it.second.toInt())  }.take(toTake))
+        return MatchingResponse(matchingTrail.map { TrailToScore(trailData = trailMapper.mapToDto(it.first), accuracy = it.second)  }.take(toTake))
     }
 }

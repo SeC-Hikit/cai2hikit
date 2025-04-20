@@ -93,20 +93,20 @@ val requestData = MatchingRequest(
     "0",
     listOf(
         CoordinatesDto(
+            11.5473039,
             43.9653826,
-            11.5473039
         ),
         CoordinatesDto(
-            43.9657346,
-            11.5478117
+            11.5478117,
+            43.9657346
         ),
         CoordinatesDto(
-            43.9659758,
-            11.5481934
+            11.5481934,
+            43.9659758
         ),
         CoordinatesDto(
-            43.9661336,
-            11.5484466
+            11.5484466,
+            43.9661336
         )
     ),
     StatsTrailMetadata(
@@ -315,7 +315,7 @@ class TrailSimilarityProcessorTest(
 
     @Test
     fun `should check data mismatch, geometry match`() {
-        val storedTrail1 = daoTrail(
+        val storedTrail = daoTrail(
             properties = Properties(
                 "1",
                 1,
@@ -376,7 +376,7 @@ class TrailSimilarityProcessorTest(
         )
 
         `when`(mockedGeoTrailRepository.findByIntersection(any(CoordinatesRectangle::class.java)))
-            .thenReturn(listOf(storedTrail1))
+            .thenReturn(listOf(storedTrail))
 
         `when`(mockedAltitudeAdapter.mapCoordsWithElevations(anyList()))
             .thenReturn(storedTrailWithElevation1)
