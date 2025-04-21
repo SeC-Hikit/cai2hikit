@@ -55,7 +55,7 @@ class TrailSimilarityProcessor @Autowired constructor(
             val metaScoresAggregate = computeMetaScores(requestData, intersectedTrailCoord)
             val finalScore = (matchingScoreWeight * trailScore + metaScoreWeight * metaScoresAggregate)
             Pair(it, floor(finalScore * 100) / 100f)
-        }.sortedBy { it.second }
+        }.sortedByDescending { it.second }
     }
 
     fun computeMetaScores(requestData: MatchingRequest, trailIn: List<Coordinates>): Double {
