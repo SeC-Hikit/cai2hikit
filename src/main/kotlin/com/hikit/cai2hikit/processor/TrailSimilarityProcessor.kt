@@ -29,7 +29,6 @@ class TrailSimilarityProcessor @Autowired constructor(
     private val fetchedTrailMapper: FetchedTrailMapper,
 ) {
     fun run(requestData: MatchingRequest): List<Pair<Trail, Double>> {
-        println(requestData)
         // 1st: take the edge coordinates and geo filter -> intersects: listOf(Trail)
         val foundByIntersecting = geoTrailRepository.findByIntersection(
             getOuterSquareForCoordinates(requestData.coordinates)
@@ -43,15 +42,10 @@ class TrailSimilarityProcessor @Autowired constructor(
             )
         }
 
-        for (i in requestCoords.indices) {
-            println(requestCoords[i])
-        }
-
         return foundByIntersecting.map {
             val intersectedTrailCoord: List<Coordinates> =
                 altitudeServiceAdapter.mapCoordsWithElevations(fetchedTrailMapper.dtoToCoords2D(it.geometry))
             val trailScore = dtwAlgorithm.run(requestCoords, intersectedTrailCoord)
-            println(trailScore)
             val metaScoresAggregate = computeMetaScores(requestData, intersectedTrailCoord)
             val finalScore = (matchingScoreWeight * trailScore + metaScoreWeight * metaScoresAggregate)
             Pair(it, floor(finalScore * 100) / 100f)
@@ -66,8 +60,6 @@ class TrailSimilarityProcessor @Autowired constructor(
             1.0 / max(1.0, ((requestData.metadata.highest - trailStatsCalculator.calculateHighestPlace(trailIn))).pow(2)),
             1.0 / max(1.0, ((requestData.metadata.lowest - trailStatsCalculator.calculateLowestPlace(trailIn))).pow(2))
         )
-
-        println("MetaScores: $metaScores")
 
         // calculate average
         val metaScoresAggregate = metaScores.sum() / metaScoresNumber

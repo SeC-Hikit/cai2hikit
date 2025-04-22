@@ -23,9 +23,6 @@ class DTWAlgorithm {
             }
         }
 
-        println("inside dtw: ")
-        println(dtw[dtw.size - 1][dtw[dtw.size - 1].size - 1])
-
         return 1.0 - min(dtw[dtw.size - 1][dtw[dtw.size - 1].size - 1], 1.0)
     }
 

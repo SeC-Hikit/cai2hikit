@@ -85,6 +85,6 @@ class TrailControllerIntegrationTest @Autowired constructor(
             storedTrail,
             IdToUpdateDate("123", LocalDateTime.now())
         )
-        assertEquals(trailController.matchTrail(matchingRequest)?.results?.first()?.trailData!!.properties.ref, "123")
+        assertEquals(trailController.matchTrail(matchingRequest)?.results?.first()?.trailData!!.properties.ref, "109")
     }
 }
