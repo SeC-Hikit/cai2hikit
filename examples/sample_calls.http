@@ -1,0 +1,133 @@
+GET http://localhost:80/api/item?id=99
+Accept: application/json
+
+###
+### GET request by code
+GET http://localhost:8090/api/v1/trail/code/1721
+
+### GET 404 not found by code
+GET http://localhost:8090/api/v1/trail/code/99999
+
+### GET request by ref code
+GET http://localhost:8090/api/v1/trail/ref/284
+
+### GET 404 not found ref
+GET http://localhost:8090/api/v1/trail/ref/99999999
+
+### POST MATCH
+POST http://localhost:8090/api/v1/trail/match
+Content-Type: application/json
+
+{
+  "code": "331B",
+  "coordinates": [
+    {
+      "latitude" : 44.1419747,
+      "longitude" : 10.8136108,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1420133,
+      "longitude" : 10.8136547,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1421104,
+      "longitude" : 10.8137074,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1422015,
+      "longitude" : 10.8137256,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1422921,
+      "longitude" : 10.8137688,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1424565,
+      "longitude" : 10.8138764,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1426122,
+      "longitude" : 10.8140795,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1428059,
+      "longitude" : 10.8141819,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1429933,
+      "longitude" : 10.8142431,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1431883,
+      "longitude" : 10.814274,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1433636,
+      "longitude" : 10.8143596,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1435463,
+      "longitude" : 10.8145105,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1436549,
+      "longitude" : 10.8146606,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.14376,
+      "longitude" : 10.8148376,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1438966,
+      "longitude" : 10.8149715,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.144017,
+      "longitude" : 10.8152112,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1441524,
+      "longitude" : 10.8153264,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1442656,
+      "longitude" : 10.8154964,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1442902,
+      "longitude" : 10.8157892,
+      "altitude" : 0
+    },
+    {
+      "latitude" : 44.1442897,
+      "longitude" : 10.8159298,
+      "altitude" : 0
+    }
+  ],
+  "metadata": {
+    "totalRise": 72,
+    "totalFall": 17,
+    "length": 411.29533449416726,
+    "totalEta": 9.343749355124746,
+    "highest": 1204,
+    "lowest": 1145
+  }
+}

@@ -10,9 +10,12 @@ job:
 spring:
     data:
       mongodb:
-        database: cai2hikit
+          database: cai2hikit
+          uri: "mongodb://localhost:27017/cai2hikit"
     application:
         name: cai2hikit
+openapi:
+    dev-url: localhost:8080
 springdoc:
     api-docs:
         path: /api/v1/api-docs
@@ -20,3 +23,9 @@ logging:
     file:
         name: logs/app.log
         path: logs
+
+# OpenAltitude microservice
+microservice:
+    oa:
+        port: 8090
+        host: localhost

@@ -1,4 +1,10 @@
 package com.hikit.cai2hikit.dao
 
-@JvmRecord
-data class Trail(val id: Long, val content: Int)
+import org.bson.types.ObjectId
+
+data class Trail (
+    var id: ObjectId = ObjectId(),
+    var properties: Properties = Properties(),
+    var geometry: Geometry = Geometry()
+) {
+}

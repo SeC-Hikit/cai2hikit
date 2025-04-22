@@ -1,14 +1,13 @@
-package com.hikit.cai2hikit.dto
+package com.hikit.cai2hikit.remote
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
-import org.springframework.data.annotation.Id
 import java.util.*
 
-data class Properties(
+data class OsmProperties(
     var id: String,
     @JsonProperty("relation_id")
-    @Id val relationId: Int,
+    val relationId: Int,
     var source: String?,
     @JsonProperty("cai_scale")
     var caiScale: String,

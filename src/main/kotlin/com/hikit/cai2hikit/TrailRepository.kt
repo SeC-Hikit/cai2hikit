@@ -1,6 +1,6 @@
 package com.hikit.cai2hikit
 
-import com.hikit.cai2hikit.dto.Trail
+import com.hikit.cai2hikit.dao.Trail
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
@@ -12,5 +12,5 @@ interface TrailRepository : MongoRepository<Trail?, Int?> {
     fun findByPropsId(id: String) : Trail?
 
     @Query(value = "{ 'properties.ref': ?0 }")
-    fun findByRef(ref: String) : List<Trail>?
+    fun findByRef(ref: String) : List<Trail>
 }
